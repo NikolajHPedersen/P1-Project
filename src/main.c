@@ -26,6 +26,10 @@ int main(void){
                 break;
             case 3:
                 loop = 0;
+                break;
+            default:
+                printf("Invalid Input");
+                break;
         }
     }
 
