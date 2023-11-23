@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "appointment_system.h"
+
+//This is the file containing the main function.
+//Most things should be implemented in other files
 
 int main(void){
     char menu_items[][32] = {
