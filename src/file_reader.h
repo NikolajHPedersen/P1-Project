@@ -9,7 +9,10 @@ struct patient{
     char factors[][32];
 
 };
-//65521
+//
 void append_entry(char file_name[], char message[]);
+void insert_entry(char file_name[], char message[], int line_number);
 void remove_entry(char file_name[], int line);
+void sorted_insert(char file_name[],char message[],int id);
+
 
