@@ -1,3 +1,5 @@
-add_library(appointment_system.c appointment_system)
+add_library(file_reader.c file_reader)
+add_library(appointment_system.c appointment_system file_reader)
 
-add_executable(main.c main appointment_system)
+
+add_executable(main.c main appointment_system file_reader)

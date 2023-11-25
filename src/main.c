@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "appointment_system.h"
+#include "file_reader.h"
 
 //This is the file containing the main function.
 //Most things should be implemented in other files
@@ -19,10 +20,12 @@ int main(void){
         printf("Which submenu do you wish to access?\n");
         printf("%s[0], %s[1], %s[2], %s[3]\n",
                menu_items[0], menu_items[1], menu_items[2], menu_items[3]);
+
         scanf("%d",&user_input);
 
         switch (user_input) {
             case 0:
+                patient_creation(NULL);
                 break;
             case 1:
                 break;
