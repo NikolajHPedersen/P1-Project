@@ -25,9 +25,9 @@ int main(void){
 
         switch (user_input) {
             case 0:
-                patient_creation(NULL);
                 break;
             case 1:
+                patient_creation(NULL);
                 break;
             case 2:
                 break;
