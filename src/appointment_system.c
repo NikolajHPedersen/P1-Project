@@ -5,7 +5,7 @@
 #include <string.h>
 
 int patient_creation(int const *CPR){
-    int internal_CPR;
+    long internal_CPR;
     char first_name[32];
     char last_name[32];
 
@@ -18,12 +18,11 @@ int patient_creation(int const *CPR){
     input(" %s",&first_name,"Enter patient first name: \n");
     input(" %s",&last_name,"Enter patient last name: \n");
 
-    unsigned short id = internal_CPR % 65521;
     char buffer[64];
-    sprintf(buffer,"id: %d,first_name: %s,last_name: %s",id,first_name, last_name);
+    sprintf(buffer,"id: %ld,first_name: %s,last_name: %s",internal_CPR,first_name, last_name);
 
     //append_entry("test_db.txt",buffer);
-    insert_entry("test_db.txt",buffer,1);
+    insert_entry("test_db.txt",buffer,2);
 
     return 0;
 }
@@ -32,3 +31,5 @@ void input(char *format_string,void *ptr, char *printed_string){
     printf("%s",printed_string);
     scanf(format_string,ptr);
 }
+
+

@@ -15,46 +15,175 @@ void append_entry(char file_name[], char message[]){
     fclose(fp);
 }
 
-void insert_entry(char file_name[], char message[], int line_number){
+void change_entry(char file_name[], char message[], int line_number){
+    //Open the file in which the entry should be inserted and a temp file
     FILE *fp = fopen(file_name,"r");
     FILE *temp = fopen("temp.txt","w");
 
-    char current_line[100];
-    for(int i = 0;i < line_number;i++){
-        fgets(current_line,100,fp);
-        fputs(current_line,temp);
-    }
+    //Copy the contents of the main file to the temp file until the line
+    //Where the entry is to be changed
+    copy_file_to_line(fp,temp,line_number);
+
+    //Skip the line to be changed
+    char temp_buffer[100];
+    fgets(temp_buffer,100,fp);
+
+    //Add the line to the temp file
     fprintf(temp,"%s\n",message);
-    do{
 
-        fgets(current_line,100,fp);
-        if(feof(fp))
-            break;
-        fputs(current_line,temp);
+    //Copy the rest of the main file to the temp file
+    copy_file(fp,temp);
 
-
-    }while(!feof(fp));
+    //Close both files so restrict mode of fopen can be changed
+    //This is done so that the contents of the temp file can be
+    //transferred back into main file
     fclose(fp);
     fclose(temp);
 
     fp = fopen(file_name,"w");
     temp = fopen("temp.txt","r");
 
-    do{
-        fgets(current_line,100,temp);
-        if(feof(temp))
-            break;
-        fputs(current_line,fp);
+    //Copy everything from the temp file to the main file
+    copy_file(temp,fp);
 
+    //Close both files and remove the temp file
+    fclose(temp);
+    remove("temp.txt");
+    fclose(fp);
+}
 
-    }while(!feof(temp));
+void insert_entry(char file_name[], char message[], int line_number){
+    //Open the file in which the entry should be inserted and a temp file
+    FILE *fp = fopen(file_name,"r");
+    FILE *temp = fopen("temp.txt","w");
+
+    //Copy the contents of the main file to the temp file until the line
+    //Where the entry is to be inserted
+    copy_file_to_line(fp,temp,line_number);
+
+    //Add the line to the temp file
+    fprintf(temp,"%s\n",message);
+
+    //Copy the rest of the main file to the temp file
+    copy_file(fp,temp);
+
+    //Close both files so restrict mode of fopen can be changed
+    //This is done so that the contents of the temp file can be
+    //transferred back into main file
+    fclose(fp);
+    fclose(temp);
+
+    fp = fopen(file_name,"w");
+    temp = fopen("temp.txt","r");
+
+    //Copy everything from the temp file to the main file
+    copy_file(temp,fp);
+
+    //Close both files and remove the temp file
+    fclose(temp);
     remove("temp.txt");
     fclose(fp);
 
 }
-void sorted_insert(char file_name[],char message[],int id);
-
 
 void remove_entry(char file_name[], int line){
+    //Open the file in which the entry should be inserted and a temp file
+    FILE *fp = fopen(file_name,"r");
+    FILE *temp = fopen("temp.txt","w");
+
+    //Copy the contents of the main file to the temp file until the line
+    //Where the entry is to be removed
+    copy_file_to_line(fp,temp,line);
+
+    //Call fgets skipping the line to be removed from being copied to the temp-file
+    char temp_buffer[100];
+    fgets(temp_buffer,100,fp);
+
+
+    //Copy the rest of the main file to the temp file
+    copy_file(fp,temp);
+
+    //Close both files so restrict mode of fopen can be changed
+    //This is done so that the contents of the temp file can be
+    //transferred back into main file
+    fclose(fp);
+    fclose(temp);
+
+    fp = fopen(file_name,"w");
+    temp = fopen("temp.txt","r");
+
+    //Copy everything from the temp file to the main file
+    copy_file(temp,fp);
+
+    //Close both files and remove the temp file
+    fclose(temp);
+    remove("temp.txt");
+    fclose(fp);
+
+}
+
+char *read_entry(char file_name[], int line){
+    FILE *fp = fopen(file_name,"r");
+    char buffer[100];
+
+    char *check_ptr;
+
+
+    for(int i = 0;i < line;i++){
+        check_ptr = fgets(buffer,100,fp);
+        if(check_ptr == NULL){
+            return NULL;
+        }
+
+    }
+    fgets(buffer,100,fp);
+    fclose(fp);
+    return strdup(buffer);
+}
+
+char *read_entry_cpr(char file_name[], long cpr){
+    FILE *fp = fopen(file_name,"r");
+    char cpr_str[100];
+    sprintf(cpr_str,"%ld",cpr);
+
+    char buffer[100] = "";
+
+    char *check_ptr;
+
+    for(;;){
+        check_ptr = fgets(buffer,100,fp);
+        if(check_ptr == NULL){
+            return NULL;
+        }
+        if(strstr(buffer, cpr_str)){
+            break;
+        }
+
+    }
+    fclose(fp);
+    return strdup(buffer);
+}
+
+//Helper functions
+void copy_file_to_line(FILE *source,FILE *destination,int line){
+    char current_line[100];
+    for(int i = 0;i < line;i++){
+        fgets(current_line,100,source);
+        fputs(current_line,destination);
+    }
+}
+
+void copy_file(FILE *source,FILE *destination){
+    char *check_ptr;
+    char current_line[100];
+
+    for(;;){
+        check_ptr = fgets(current_line,100,source);
+
+        if(check_ptr == NULL)
+            break;
+
+        fputs(current_line,destination);
+    }
 
 }

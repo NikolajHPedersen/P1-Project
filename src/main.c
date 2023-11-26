@@ -25,11 +25,14 @@ int main(void){
 
         switch (user_input) {
             case 0:
+                printf("%s", read_entry_cpr("test_db.txt",39740));
                 break;
             case 1:
                 patient_creation(NULL);
                 break;
             case 2:
+                change_entry("test_db.txt","This line was changed!",2);
+                printf("%s", read_entry("test_db.txt",6));
                 break;
             case 3:
                 loop = 0;
