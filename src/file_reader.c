@@ -4,6 +4,15 @@
 #include <stdlib.h>
 #include <string.h>
 
+//This file (poorly) implements the ability to read and write to text files
+//These are all massively inefficient but there might not be better ways to do it with text files
+//(If there are any ideas for improvements let me know [Nikolaj])
+
+//TODO
+// - rewrite change_entry to just overwrite the line instead of using a temp file
+// - discuss the use of a sorted list so it is possible to use binary search
+
+//WRITE & REMOVE
 void append_entry(char file_name[], char message[]){
     FILE *fp = fopen(file_name,"a");
     if(fp == NULL){
@@ -49,6 +58,20 @@ void change_entry(char file_name[], char message[], int line_number){
     //Close both files and remove the temp file
     fclose(temp);
     remove("temp.txt");
+    fclose(fp);
+}
+
+void change_entry_v2(char file_name[], char message[], int line_number){
+    FILE *fp = fopen(file_name,"r+");
+
+    char current_line[50];
+
+    for(int i = 1;i < line_number;i++){
+        fgets(current_line,50,fp);
+    }
+
+    fputs(message,fp);
+
     fclose(fp);
 }
 
@@ -122,28 +145,32 @@ void remove_entry(char file_name[], int line){
 
 }
 
+//READ
+
 char *read_entry(char file_name[], int line){
     FILE *fp = fopen(file_name,"r");
     char buffer[100];
 
     char *check_ptr;
 
-
-    for(int i = 0;i < line;i++){
+    for(int i = 1;i < line;i++){
         check_ptr = fgets(buffer,100,fp);
         if(check_ptr == NULL){
             return NULL;
         }
 
     }
-    fgets(buffer,100,fp);
+    check_ptr = fgets(buffer,100,fp);
+    if(check_ptr == NULL){
+        return NULL;
+    }
     fclose(fp);
     return strdup(buffer);
 }
 
 char *read_entry_cpr(char file_name[], long cpr){
     FILE *fp = fopen(file_name,"r");
-    char cpr_str[100];
+    char cpr_str[10];
     sprintf(cpr_str,"%ld",cpr);
 
     char buffer[100] = "";
@@ -162,6 +189,31 @@ char *read_entry_cpr(char file_name[], long cpr){
     }
     fclose(fp);
     return strdup(buffer);
+}
+
+//MISC
+int find_entry_cpr(char file_name[], long cpr){
+    FILE *fp = fopen(file_name,"r");
+    char cpr_str[10];
+    sprintf(cpr_str,"%ld",cpr);
+
+    char buffer[100] = "";
+
+    char *check_ptr;
+
+    int count = 1;
+
+    for(;;count++){
+        check_ptr = fgets(buffer,100,fp);
+        if(check_ptr == NULL){
+            return -1;
+        }
+        if(strstr(buffer, cpr_str)){
+            break;
+        }
+    }
+
+    return count;
 }
 
 //Helper functions

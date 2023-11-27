@@ -31,8 +31,9 @@ int main(void){
                 patient_creation(NULL);
                 break;
             case 2:
-                change_entry("test_db.txt","This line was changed!",2);
+                change_entry_v2("test_db.txt","This line was changed again!",1);
                 printf("%s", read_entry("test_db.txt",6));
+                printf("%d", find_entry_cpr("test_db.txt",32872));
                 break;
             case 3:
                 loop = 0;

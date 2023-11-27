@@ -19,6 +19,7 @@ void insert_entry(char file_name[], char message[], int line_number);
 
 //changes entry at the line number specified to the message parameter (No error handling)
 void change_entry(char file_name[], char message[], int line_number);
+void change_entry_v2(char file_name[], char message[], int line_number);
 
 //Remove entry from line number (No error handling)
 void remove_entry(char file_name[], int line);
@@ -31,6 +32,11 @@ char *read_entry(char file_name[], int line);
 
 //Returns the string with containing a certain cpr
 char *read_entry_cpr(char file_name[], long cpr);
+
+//MISC functionality
+
+//Returns line-number of entry containing cpr
+int find_entry_cpr(char file_name[], long cpr);
 
 //HELPER FUNCTIONS
 
