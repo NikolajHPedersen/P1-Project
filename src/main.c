@@ -12,20 +12,21 @@ int main(void){
                         "Appointment creation",
                         "Patient creation",
                         "Rebook/delete appointment",
+                        "Show appointments",
                         "Exit"};
 
     int user_input;
     int loop = 1;
     while(loop == 1){
         printf("Which submenu do you wish to access?\n");
-        printf("%s[0], %s[1], %s[2], %s[3]\n",
-               menu_items[0], menu_items[1], menu_items[2], menu_items[3]);
+        printf("%s[0], %s[1], %s[2], %s[3], %s[4]\n",
+               menu_items[0], menu_items[1], menu_items[2], menu_items[3], menu_items[4]);
 
         scanf("%d",&user_input);
 
         switch (user_input) {
             case 0:
-                printf("%s", read_entry_cpr("test_db.txt",39740));
+                printf("%s", read_entry_cpr("test_db.txt",32873));
                 break;
             case 1:
                 patient_creation(NULL);
@@ -36,6 +37,8 @@ int main(void){
                 printf("%d", find_entry_cpr("test_db.txt",32872));
                 break;
             case 3:
+                break;
+            case 4:
                 loop = 0;
                 break;
             default:
