@@ -28,7 +28,7 @@ int main(void){
         switch (user_input) {
             case 0:
                 printf("%s", read_entry_cpr("test_db.txt",32873));
-                create_schedule(" ");
+                create_empty_schedule(" ");
                 break;
             case 1:
                 patient_creation(NULL);

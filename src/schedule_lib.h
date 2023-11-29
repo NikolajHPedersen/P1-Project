@@ -1,5 +1,7 @@
 #include <time.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "file_reader.h"
 
@@ -36,13 +38,18 @@ struct block_t{
 };
 typedef struct block_t block_t;
 
-void create_schedule(char file_name[]);
+void create_empty_schedule(char file_name[]);
 
 char *get_date_id(struct tm *date);
 
 date_t id_to_date(char id[]);
 
+char *date_to_id(date_t date);
+
 int get_weekday(struct tm *time);
 
 char *substring(char str[],int start,int end);
 
+int contained_in(int arr[], int len, int value);
+
+int is_leap_year(int year);
