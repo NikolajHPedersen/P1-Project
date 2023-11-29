@@ -11,12 +11,16 @@ struct patient{
     char factors[][32];
 };
 
-struct date{
+struct date_t{
     int year;
     int month;
     int day;
+    int weekday;
 };
-typedef struct date date;
+typedef struct date_t date_t;
+
+enum weekday_e {sunday, monday, tuesday, wednesday, thursday, friday, saturday};
+typedef enum weekday_e weekday_e;
 
 struct appointment_t{
     long id;
@@ -32,7 +36,13 @@ struct block_t{
 };
 typedef struct block_t block_t;
 
+void create_schedule(char file_name[]);
+
 char *get_date_id(struct tm *date);
 
+date_t id_to_date(char id[]);
 
-void create_schedule(char file_name[]);
+int get_weekday(struct tm *time);
+
+char *substring(char str[],int start,int end);
+
