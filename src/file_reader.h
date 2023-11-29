@@ -1,14 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-struct patient{
-    int patient_id;
-    char first_name[32];
-    char last_name[32];
-    int age;
-    char factors[][32];
 
-};
 //WRITE/REMOVE functionality
 
 //adds a string to the end of text-file
