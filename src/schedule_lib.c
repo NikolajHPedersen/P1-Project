@@ -1,7 +1,7 @@
 #include "schedule_lib.h"
 
-
 #define APPOINTMENT_DURARTION 30
+#define DAYS_IN_SCHEDULE 30
 
 /* Outline of schedule format:
  * block id: date_t in year-month-day
@@ -22,8 +22,6 @@
  * /-
  */
 
-
-
 void create_empty_schedule(char file_name[]){
     time_t current_time;
     struct tm *info;
@@ -34,13 +32,12 @@ void create_empty_schedule(char file_name[]){
     date_t start_date = id_to_date(start_id);
     start_date.weekday = (weekday_e)get_weekday(info);
 
-
-
+    date_t next_day = start_date;
 
     printf("%s",start_id);
-
 }
 
+//takes a struct tm and turns it into an id
 char *get_date_id(struct tm *date){
     char id[10];
     char format_string[] = "%y%m%d";
@@ -91,8 +88,7 @@ void add_day(date_t *date){
         date->month++;
     }
 
-
-    date->weekday %= 7;
+    date->weekday = (date->weekday + 1) % 7;
 }
 
 //returns 1 if leap year else returns 0;
@@ -107,7 +103,6 @@ int is_leap_year(int year){
         return 0;
     }
 }
-
 
 date_t id_to_date(char id[]){
     date_t new_date;

@@ -6,7 +6,7 @@
 #include "file_reader.h"
 
 struct patient{
-    int patient_id;
+    long long int patient_id;
     char first_name[32];
     char last_name[32];
     int age;
@@ -33,6 +33,7 @@ struct appointment_t{
 typedef struct appointment_t appointment_t;
 
 struct block_t{
+    int block_id;
     int block_size;
     appointment_t appointments[];
 };
