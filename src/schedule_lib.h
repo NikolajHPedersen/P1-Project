@@ -61,7 +61,7 @@ void date_to_id(date_t date, char output[]);
 
 int get_weekday(struct tm *time);
 
-char *substring(char str[],int start,int end);
+void substring(char src[],char dest[] ,int start,int end);
 
 int contained_in(int arr[], int len, int value);
 

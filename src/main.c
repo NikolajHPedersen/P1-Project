@@ -25,10 +25,18 @@ int main(void){
 
         scanf("%d",&user_input);
 
+        char *init_string = "chili";
+        char res[3];
+        substring(init_string,res,0,2);
+        printf("%s",res);
+
         switch (user_input) {
             case 0:
                 printf("%s", read_entry_cpr("test_db.txt",32873));
-                create_empty_schedule("test_schedule.txt");
+                char file_name[] = "test_schedule.txt";
+                printf("%s",file_name);
+                create_empty_schedule(file_name);
+
                 break;
             case 1:
                 patient_creation(NULL);
@@ -39,6 +47,7 @@ int main(void){
                 printf("%d", find_entry_cpr("test_db.txt",32872));
                 break;
             case 3:
+
                 break;
             case 4:
                 loop = 0;

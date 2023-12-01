@@ -25,39 +25,54 @@ void create_empty_schedule(char file_name[]){
     time_t current_time;
     struct tm *info;
     time(&current_time);
+
     info = localtime(&current_time);
+
     char *start_id = get_date_id(info);
+
+    printf("\n%s\n",start_id);
+
     date_t start_date = id_to_date(start_id);
+
+    printf("\n%d/%d/%d\n",start_date.year,start_date.month,start_date.day);
+
+    printf("\n%s\n",start_id);
+
     start_date.weekday = (weekday_e)get_weekday(info);
 
     date_t next_day = start_date;
 
-    char current_id[6];
+    char current_id[10];
+
 
     for(int i = 0;i < DAYS_IN_SCHEDULE;i++){
-        if(next_day.weekday == 0 || next_day.weekday == 6){
+        if(next_day.weekday == sunday || next_day.weekday == saturday){
             printf("Got this far! 3");
             append_entry(file_name, "++ Weekend");
             add_day(&next_day);
-            continue;
+            printf("%d/%d/%d",next_day.year,next_day.month,next_day.day);
+        } else{
+            date_to_id(next_day, current_id);
+
+
+            add_block(file_name,current_id);
+            add_day(&next_day);
+            printf("%d/%d/%d",next_day.year,next_day.month,next_day.day);
         }
-        printf("Got this far! 4");
-
-       date_to_id(next_day, current_id);
-
-        printf("Got this far! 5");
-
-        add_block(file_name,current_id);
-        add_day(&next_day);
     }
 
     printf("%s",start_id);
 }
 
 void add_block(char file_name[], char *id){
-    char buffer[16];
+    char *buffer = malloc(sizeof(char)*25);
+    if(buffer == NULL){
+        printf("something went wrong!");
+        exit(EXIT_FAILURE);
+    }
+
     sprintf(buffer,"## %s",id);
-    printf("Got this far! 6");
+
     append_entry(file_name,buffer);
 
 }
@@ -116,10 +131,13 @@ int is_leap_year(int year){
 
 date_t id_to_date(char id[]){
     date_t new_date;
-
-    new_date.year = atoi(substring(id,0,1));
-    new_date.month = atoi(substring(id,2,3));
-    new_date.day = atoi(substring(id,4,5));
+    char buffer[3];
+    substring(id, buffer,0,1);
+    new_date.year = atoi(buffer);
+    substring(id, buffer,2,3);
+    new_date.month = atoi(buffer);
+    substring(id, buffer,4,5);
+    new_date.day = atoi(buffer);
 
     return new_date;
 }
@@ -136,13 +154,10 @@ int get_weekday(struct tm *time){
     return atoi(buffer);
 }
 
-char *substring(char str[],int start,int end){
-    char buffer[end - start];
-
+void substring(char src[],char dest[] ,int start,int end){
     for(int i = start;i <= end;i++){
-        strcat(buffer,&str[i]);
+        strcat(dest,&src[i]);
     }
-    return strdup(buffer);
 }
 
 /***
