@@ -1,11 +1,10 @@
 #include "schedule_lib.h"
 
-#define APPOINTMENT_DURARTION 30
-#define DAYS_IN_SCHEDULE 30
+
 
 /* Outline of schedule format:
  * block id: date_t in year-month-day
- * Beginning of block: --
+ * Beginning of block: ##
  * End of Block: /-
  * appointment id: date_t + time e.g. an appointment 25/09/23 12:00 gets the id 2309251200
  *
@@ -15,11 +14,11 @@
  * general format: id - cpr (0 if empty)
  *
  * example:
- * -- 230925
+ * ## 230925
  *    2309250800-xxxxxxxxxx:xray
  *    2309250830-xxxxxxxxxx:mri
  *    2309250900-0
- * /-
+ * //
  */
 
 void create_empty_schedule(char file_name[]){
@@ -27,14 +26,32 @@ void create_empty_schedule(char file_name[]){
     struct tm *info;
     time(&current_time);
     info = localtime(&current_time);
-
+    printf("Got this far!");
     char *start_id = get_date_id(info);
     date_t start_date = id_to_date(start_id);
     start_date.weekday = (weekday_e)get_weekday(info);
 
     date_t next_day = start_date;
 
+    for(int i = 0;i < DAYS_IN_SCHEDULE;i++){
+        if(next_day.weekday == 0 || next_day.weekday == 6){
+            append_entry(file_name, "++ Weekend");
+            add_day(&next_day);
+            continue;
+        }
+        add_block(file_name,date_to_id(next_day));
+        add_day(&next_day);
+    }
+
     printf("%s",start_id);
+}
+
+void add_block(char *file_name, char *id){
+    char buffer[10];
+    sprintf(buffer,"## %s",id);
+
+    append_entry(file_name,buffer);
+
 }
 
 //takes a struct tm and turns it into an id
@@ -44,21 +61,6 @@ char *get_date_id(struct tm *date){
     strftime(id, 10,format_string,date);
 
     return strdup(id);
-}
-
-/***
- *
- * @param arr the array that is searched for value in
- * @param len the length of the array
- * @param value the value to check for in array
- * @return returns 1 if value is in arr; 0 if not
- */
-int contained_in(int arr[], int len, int value){
-    for(int i = 0;i < len;i++){
-        if(arr[i] == value)
-            return 1;
-    }
-    return 0;
 }
 
 //Adds a day to the date struct it is given
@@ -135,3 +137,17 @@ char *substring(char str[],int start,int end){
     return strdup(buffer);
 }
 
+/***
+ *
+ * @param arr the array that is searched for value in
+ * @param len the length of the array
+ * @param value the value to check for in array
+ * @return returns 1 if value is in arr; 0 if not
+ */
+int contained_in(int arr[], int len, int value){
+    for(int i = 0;i < len;i++){
+        if(arr[i] == value)
+            return 1;
+    }
+    return 0;
+}

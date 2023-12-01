@@ -5,8 +5,12 @@
 
 #include "file_reader.h"
 
+#define APPOINTMENT_DURARTION 30
+#define DAYS_IN_SCHEDULE 30
+#define WORKING_DAY 8
+
 struct patient{
-    long long int patient_id;
+    unsigned int patient_id;
     char first_name[32];
     char last_name[32];
     int age;
@@ -35,11 +39,19 @@ typedef struct appointment_t appointment_t;
 struct block_t{
     int block_id;
     int block_size;
-    appointment_t appointments[];
+
 };
 typedef struct block_t block_t;
 
+struct subblock_t{
+    unsigned int id;
+    appointment_t appointments[];
+};
+typedef struct subblock_t subblock_t;
+
 void create_empty_schedule(char file_name[]);
+
+void add_day(date_t *date);
 
 char *get_date_id(struct tm *date);
 
@@ -54,3 +66,5 @@ char *substring(char str[],int start,int end);
 int contained_in(int arr[], int len, int value);
 
 int is_leap_year(int year);
+
+void add_block(char file_name[],char *id);
