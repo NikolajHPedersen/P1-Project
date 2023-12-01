@@ -26,30 +26,38 @@ void create_empty_schedule(char file_name[]){
     struct tm *info;
     time(&current_time);
     info = localtime(&current_time);
-    printf("Got this far!");
     char *start_id = get_date_id(info);
     date_t start_date = id_to_date(start_id);
     start_date.weekday = (weekday_e)get_weekday(info);
 
     date_t next_day = start_date;
 
+    char current_id[6];
+
     for(int i = 0;i < DAYS_IN_SCHEDULE;i++){
         if(next_day.weekday == 0 || next_day.weekday == 6){
+            printf("Got this far! 3");
             append_entry(file_name, "++ Weekend");
             add_day(&next_day);
             continue;
         }
-        add_block(file_name,date_to_id(next_day));
+        printf("Got this far! 4");
+
+       date_to_id(next_day, current_id);
+
+        printf("Got this far! 5");
+
+        add_block(file_name,current_id);
         add_day(&next_day);
     }
 
     printf("%s",start_id);
 }
 
-void add_block(char *file_name, char *id){
-    char buffer[10];
+void add_block(char file_name[], char *id){
+    char buffer[16];
     sprintf(buffer,"## %s",id);
-
+    printf("Got this far! 6");
     append_entry(file_name,buffer);
 
 }
@@ -116,10 +124,10 @@ date_t id_to_date(char id[]){
     return new_date;
 }
 
-char *date_to_id(date_t date){
+void date_to_id(date_t date, char output[]){
     char buffer[6];
     sprintf(buffer,"%01d%01d%01d",date.year,date.month,date.day);
-    return strdup(buffer);
+    strcpy(output,buffer);
 }
 
 int get_weekday(struct tm *time){

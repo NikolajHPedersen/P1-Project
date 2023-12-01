@@ -57,7 +57,7 @@ char *get_date_id(struct tm *date);
 
 date_t id_to_date(char id[]);
 
-char *date_to_id(date_t date);
+void date_to_id(date_t date, char output[]);
 
 int get_weekday(struct tm *time);
 

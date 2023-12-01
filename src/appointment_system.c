@@ -19,7 +19,7 @@ int patient_creation(unsigned int const *CPR){
     input(" %s",&last_name,"Enter patient last name: \n");
 
     char buffer[64];
-    sprintf(buffer,"id: %010lu,first_name: %s,last_name: %s",internal_CPR,first_name, last_name);
+    sprintf(buffer,"id: %010u,first_name: %s,last_name: %s",internal_CPR,first_name, last_name);
 
     //append_entry("test_db.txt",buffer);
     insert_entry("test_db.txt",buffer,2);
