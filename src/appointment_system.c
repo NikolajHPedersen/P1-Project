@@ -21,8 +21,8 @@ int patient_creation(unsigned int const *CPR){
     char buffer[64];
     sprintf(buffer,"id: %010u,first_name: %s,last_name: %s",internal_CPR,first_name, last_name);
 
-    //append_entry("test_db.txt",buffer);
-    insert_entry("test_db.txt",buffer,2);
+    append_entry("test_db.txt",buffer);
+    //insert_entry("test_db.txt",buffer,2);
 
     return 0;
 }

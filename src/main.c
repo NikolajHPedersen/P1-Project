@@ -18,6 +18,7 @@ int main(void){
 
     int user_input;
     int loop = 1;
+
     while(loop == 1){
         printf("Which submenu do you wish to access?\n");
         printf("%s[0], %s[1], %s[2], %s[3], %s[4]\n",
@@ -25,15 +26,10 @@ int main(void){
 
         scanf("%d",&user_input);
 
-        char *init_string = "chili";
-        char res[3];
-        substring(init_string,res,0,2);
-        printf("%s",res);
-
         switch (user_input) {
             case 0:
                 printf("%s", read_entry_cpr("test_db.txt",32873));
-                char file_name[] = "test_schedule.txt";
+                char file_name[18] = "test_schedule.txt";
                 printf("%s",file_name);
                 create_empty_schedule(file_name);
 

@@ -51,7 +51,9 @@ typedef struct subblock_t subblock_t;
 
 void create_empty_schedule(char file_name[]);
 
-void add_day(date_t *date);
+date_t add_day(date_t date);
+
+void append_line_schedule(FILE *fp,char *message);
 
 char *get_date_id(struct tm *date);
 
@@ -61,10 +63,10 @@ void date_to_id(date_t date, char output[]);
 
 int get_weekday(struct tm *time);
 
-void substring(char src[],char dest[] ,int start,int end);
+void substring(char src[],char dest[] ,int start,int len);
 
 int contained_in(int arr[], int len, int value);
 
 int is_leap_year(int year);
 
-void add_block(char file_name[],char *id);
+void add_block(FILE *fp, char *id);
