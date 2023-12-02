@@ -8,6 +8,7 @@
 //Most things should be implemented in other files
 
 int main(void){
+    sort_cpr_database("test_db.txt");
     char menu_items[][32] = {
                         "Appointment creation",
                         "Patient creation",

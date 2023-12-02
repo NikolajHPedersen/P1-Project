@@ -38,6 +38,9 @@ char *read_entry_cpr(char file_name[], long cpr);
 //Returns line-number of entry containing cpr
 int find_entry_cpr(char file_name[], long cpr);
 
+//Implements a "merge sort"-style algorithm to sort cpr-numbers from lowest to highest
+void sort_cpr_database(char file_name[]);
+
 //HELPER FUNCTIONS
 
 //Copies the contents of the source file to the destination file (No error handling)

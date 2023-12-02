@@ -216,6 +216,51 @@ int find_entry_cpr(char file_name[], long cpr){
     return count;
 }
 
+void sort_cpr_database(char file_name[]){
+    FILE *fp = fopen(file_name, "r");
+    //FILE *tmp = fopen("tmp_db.txt", "w");
+    if(fp == NULL /*TODO: Add 'or' condition for *tmp as well*/){
+        printf("Can't open or create files as required. Quiting program...\n");
+        exit(EXIT_FAILURE);
+    }
+
+    //FASE 1: Importing CPR-Numbers into an array
+
+    //Determine how many patient entries there are in txt file, by checking the amount of '\n'
+    int number_of_entries = 0;
+    while(!feof(fp)){
+        if(fgetc(fp) == '\n'){
+            number_of_entries++;
+        }
+    }
+
+    printf("Number of entries: %d\n", number_of_entries);
+
+    //Rewind file pointer to starting position
+    /*Using fseek, one can set the location of the file position indicator to a specific location,
+     *and check if any errors occured. fseek returns a non-zero value if there is an error.
+     * If its succesful it returns zero */
+    if(fseek(fp, 0L, SEEK_SET) != 0){
+        printf("An error has occured during database loading. Quitting program...\n");
+        exit(EXIT_FAILURE);
+    }
+
+    //Find CPR-Number string on a line
+    char buffer[1500];
+    for (int i = 0; i < number_of_entries; ++i) {
+        fgets(buffer, 15, fp);
+        char buf[150];
+        //sscanf(buffer, "%[^,]", buf);
+        printf("Parsed CPR-Number string: %s\n", buffer);
+    }
+
+    //Convert CPR-Number string into an int
+    //Load the CPR-Number string from txt file, into an int array
+
+    //FASE 2: Sort the array using an implementation of Merge Sort.
+
+}
+
 //Helper functions
 void copy_file_to_line(FILE *source,FILE *destination,int line){
     char current_line[100];
