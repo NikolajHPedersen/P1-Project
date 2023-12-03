@@ -55,7 +55,7 @@ date_t add_day(date_t date);
 
 void append_line_schedule(FILE *fp,char *message);
 
-char *get_date_id(struct tm *date);
+void get_date_id(struct tm *date, char *str);
 
 date_t id_to_date(char id[]);
 
@@ -63,7 +63,7 @@ void date_to_id(date_t date, char output[]);
 
 int get_weekday(struct tm *time);
 
-void substring(char src[],char dest[] ,int start,int len);
+void substring(char const src[],char dest[] ,int start,int len);
 
 int contained_in(int arr[], int len, int value);
 

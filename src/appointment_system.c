@@ -6,8 +6,8 @@
 
 int patient_creation(unsigned int const *CPR){
     unsigned int internal_CPR;
-    char first_name[32];
-    char last_name[32];
+    char first_name[32] = "";
+    char last_name[32] = "";
 
 
     if(CPR == NULL)

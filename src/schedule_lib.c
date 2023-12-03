@@ -29,7 +29,8 @@ void create_empty_schedule(char file_name[]){
     info = localtime(&current_time);
 
     //Create an id based on that time information
-    char *start_id = get_date_id(info);
+    char start_id[10];
+    get_date_id(info, start_id);
 
     printf("\n%s\n",start_id);
 
@@ -38,7 +39,6 @@ void create_empty_schedule(char file_name[]){
 
     printf("\n%d/%d/%d\n",start_date.year,start_date.month,start_date.day);
 
-    printf("\n%s\n",start_id);
 
     start_date.weekday = (weekday_e)get_weekday(info);
 
@@ -48,7 +48,9 @@ void create_empty_schedule(char file_name[]){
     date_t next_day = id_to_date(start_id);
     next_day.weekday = (weekday_e)get_weekday(info);
 
-    char current_id[11];
+    char current_id[24];
+
+    printf("%s",file_name);
 
     FILE *fp = fopen(file_name,"a");
     if(fp == NULL){
@@ -56,15 +58,18 @@ void create_empty_schedule(char file_name[]){
         exit(EXIT_FAILURE);
     }
 
+
     for(int i = 0;i < DAYS_IN_SCHEDULE;i++){
         current_day = next_day;
-        if(next_day.weekday == sunday || next_day.weekday == saturday){
-            printf("Got this far! 3");
+        printf("1");
+        if(current_day.weekday == sunday || current_day.weekday == saturday){
+            printf("2");
+            date_to_id(next_day, current_id);
             append_line_schedule(fp, "++ Weekend");
             next_day = add_day(current_day);
         } else{
             date_to_id(next_day, current_id);
-
+            printf("3");
             add_block(fp,current_id);
             next_day = add_day(current_day);
 
@@ -74,7 +79,7 @@ void create_empty_schedule(char file_name[]){
 }
 
 void add_block(FILE *fp, char *id){
-    char *buffer = calloc(25,sizeof(char));
+    char *buffer = calloc(32,sizeof(char));
     if(buffer == NULL){
         printf("something went wrong!");
         exit(EXIT_FAILURE);
@@ -84,6 +89,7 @@ void add_block(FILE *fp, char *id){
 
     append_line_schedule(fp,buffer);
 
+    free(buffer);
 }
 void append_line_schedule(FILE *fp,char *message){
     fprintf(fp,"%s\n",message);
@@ -91,46 +97,15 @@ void append_line_schedule(FILE *fp,char *message){
 
 
 //takes a struct tm and turns it into an id
-char *get_date_id(struct tm *date){
+void get_date_id(struct tm *date, char *str){
     char id[10];
     char format_string[] = "%y%m%d";
     strftime(id, 10,format_string,date);
 
-    return strdup(id);
+    strcpy(str,id);
 }
 
 //Adds a day to the date struct it is given
-/*
-void add_day(date_t *date){
-    date->day++;
-    int thirty_one[] = {1, 3,5,7,8,10,12};
-    int thirty[] = {4,6,9,11};
-
-    if(date->day == 31 && contained_in(thirty, 4, date->month)){
-        date->day = 1;
-        date->month++;
-    }
-    else if(date->day == 32 && contained_in(thirty_one, 7, date->month)){
-        date->day = 1;
-        date->month++;
-        if(date->month == 13){
-            date->month = 1;
-            date->year++;
-        }
-    }
-    else if(date->month == 2 && is_leap_year(date->year+2000) == 0 && date->day == 29){
-        date->day = 1;
-        date->month++;
-    }
-    else if(date->month == 2 && is_leap_year(date->year+2000) == 1 && date->day == 30){
-        date->day = 1;
-        date->month++;
-    }
-
-    date->weekday = (date->weekday + 1) % 7;
-}
-*/
-
 date_t add_day(date_t date){
     int days_in_month[12] = {31, 28, 31,30,31,30,31,31,30,31,30,31};
 
@@ -171,7 +146,8 @@ int is_leap_year(int year){
 
 date_t id_to_date(char id[]){
     date_t new_date;
-    char buffer[3];
+    char buffer[10];
+    printf("%s",id);
     substring(id, buffer,0,2);
     new_date.year = atoi(buffer);
     substring(id, buffer,2,2);
@@ -182,6 +158,18 @@ date_t id_to_date(char id[]){
     return new_date;
 }
 
+void substring(char const src[],char dest[] ,int start,int len){
+    int i = 0;
+    char temp;
+    for(;i < len;i++){
+        temp = src[i + start];
+        dest[i] = temp;
+    }
+    dest[i + 1] = '\0';
+
+}
+
+
 void date_to_id(date_t date, char output[]){
     char buffer[6];
     sprintf(buffer,"%02d%02d%02d",date.year,date.month,date.day);
@@ -189,21 +177,12 @@ void date_to_id(date_t date, char output[]){
 }
 
 int get_weekday(struct tm *time){
-    char buffer[1];
+    char buffer[5];
     strftime(buffer,sizeof(int),"%w",time);
     return atoi(buffer);
 }
 
-void substring(char src[],char dest[] ,int start,int len){
-    char buffer[1000];
-    int i = 0;
-    for(;i < len;i++){
-        buffer[i] = src[i + start];
-    }
-    buffer[i + 1] = '\0';
-    strcpy(dest, buffer);
 
-}
 
 /***
  *
