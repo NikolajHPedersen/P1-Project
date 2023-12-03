@@ -8,6 +8,7 @@
 #define APPOINTMENT_DURARTION 30
 #define DAYS_IN_SCHEDULE 30
 #define WORKING_DAY 8
+#define START_TIME 8
 
 struct patient{
     unsigned int patient_id;

@@ -19,7 +19,7 @@ int main(void){
     int user_input;
     int loop = 1;
 
-    //while(loop == 1){
+    while(loop == 1){
         printf("Which submenu do you wish to access?\n");
         printf("%s[0], %s[1], %s[2], %s[3], %s[4]\n",
                menu_items[0], menu_items[1], menu_items[2], menu_items[3], menu_items[4]);
@@ -52,7 +52,7 @@ int main(void){
                 break;
         }
         printf("What!");
-    //}
+    }
 
     return 0;
 }

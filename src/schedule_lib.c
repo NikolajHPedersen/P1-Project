@@ -52,7 +52,7 @@ void create_empty_schedule(char file_name[]){
 
     printf("%s",file_name);
 
-    FILE *fp = fopen(file_name,"a");
+    FILE *fp = fopen(file_name,"w");
     if(fp == NULL){
         printf("Something went wrong");
         exit(EXIT_FAILURE);
@@ -80,6 +80,8 @@ void create_empty_schedule(char file_name[]){
 
 void add_block(FILE *fp, char *id){
     char *buffer = calloc(32,sizeof(char));
+
+
     if(buffer == NULL){
         printf("something went wrong!");
         exit(EXIT_FAILURE);
@@ -89,6 +91,25 @@ void add_block(FILE *fp, char *id){
 
     append_line_schedule(fp,buffer);
 
+    char *buffer2 = calloc(32,sizeof(char));
+
+    int current_hour = START_TIME;
+    int current_minutes = 0;
+
+
+    while (current_hour < START_TIME + WORKING_DAY){
+        sprintf(buffer2,"   %s-%02d%02d:0",id,current_hour,current_minutes);
+        append_line_schedule(fp,buffer2);
+        current_minutes += APPOINTMENT_DURARTION;
+
+        if(current_minutes/60 == 1){
+            current_minutes %= 60;
+            current_hour++;
+        }
+    }
+    append_line_schedule(fp, "//------------");
+
+    free(buffer2);
     free(buffer);
 }
 void append_line_schedule(FILE *fp,char *message){
@@ -168,7 +189,6 @@ void substring(char const src[],char dest[] ,int start,int len){
     dest[i + 1] = '\0';
 
 }
-
 
 void date_to_id(date_t date, char output[]){
     char buffer[6];
