@@ -1,6 +1,8 @@
 #include "schedule_lib.h"
 
-
+// This file implements the functions to create a new clean schedule
+// The header also contains several structs used to help store data from the schedule
+//
 
 /* Outline of schedule format:
  * block id: date_t in year-month-day
@@ -21,6 +23,7 @@
  * //
  */
 
+//Takes a filename and creates an empty schedule in that file
 void create_empty_schedule(char file_name[]){
     //get the current time
     time_t current_time;
@@ -28,20 +31,11 @@ void create_empty_schedule(char file_name[]){
     time(&current_time);
     info = localtime(&current_time);
 
-    //Create an id based on that time information
+    //Create an id based on that time
     char start_id[10];
     get_date_id(info, start_id);
 
-    printf("\n%s\n",start_id);
-
-    //Create a new date struct from the id
-    date_t start_date = id_to_date(start_id);
-
-    printf("\n%d/%d/%d\n",start_date.year,start_date.month,start_date.day);
-
-
-    start_date.weekday = (weekday_e)get_weekday(info);
-
+    //Create two date structs from the start id
     date_t current_day = id_to_date(start_id);
     current_day.weekday = (weekday_e)get_weekday(info);
 
@@ -49,8 +43,6 @@ void create_empty_schedule(char file_name[]){
     next_day.weekday = (weekday_e)get_weekday(info);
 
     char current_id[24];
-
-    printf("%s",file_name);
 
     FILE *fp = fopen(file_name,"w");
     if(fp == NULL){
@@ -61,18 +53,14 @@ void create_empty_schedule(char file_name[]){
 
     for(int i = 0;i < DAYS_IN_SCHEDULE;i++){
         current_day = next_day;
-        printf("1");
         if(current_day.weekday == sunday || current_day.weekday == saturday){
-            printf("2");
             date_to_id(next_day, current_id);
             append_line_schedule(fp, "++ Weekend");
             next_day = add_day(current_day);
         } else{
             date_to_id(next_day, current_id);
-            printf("3");
             add_block(fp,current_id);
             next_day = add_day(current_day);
-
         }
     }
     fclose(fp);
@@ -80,7 +68,6 @@ void create_empty_schedule(char file_name[]){
 
 void add_block(FILE *fp, char *id){
     char *buffer = calloc(32,sizeof(char));
-
 
     if(buffer == NULL){
         printf("something went wrong!");
@@ -100,7 +87,7 @@ void add_block(FILE *fp, char *id){
     while (current_hour < START_TIME + WORKING_DAY){
         sprintf(buffer2,"   %s-%02d%02d:0",id,current_hour,current_minutes);
         append_line_schedule(fp,buffer2);
-        current_minutes += APPOINTMENT_DURARTION;
+        current_minutes += APPOINTMENT_DURATION;
 
         if(current_minutes/60 == 1){
             current_minutes %= 60;
@@ -112,6 +99,8 @@ void add_block(FILE *fp, char *id){
     free(buffer2);
     free(buffer);
 }
+
+//Takes a FILE pointer and a string which is appended to the file referenced by the FILE pointer
 void append_line_schedule(FILE *fp,char *message){
     fprintf(fp,"%s\n",message);
 }
@@ -120,6 +109,8 @@ void append_line_schedule(FILE *fp,char *message){
 //takes a struct tm and turns it into an id
 void get_date_id(struct tm *date, char *str){
     char id[10];
+    //This format string when given to strftime is going to return a string with the desired information for an id
+    //
     char format_string[] = "%y%m%d";
     strftime(id, 10,format_string,date);
 
@@ -128,9 +119,14 @@ void get_date_id(struct tm *date, char *str){
 
 //Adds a day to the date struct it is given
 date_t add_day(date_t date){
+    //Array containing the days in each month
     int days_in_month[12] = {31, 28, 31,30,31,30,31,31,30,31,30,31};
 
+    //The day field of the struct is increased by one
     date.day = date.day + 1;
+
+    //This part checks if it is the end of february and a leap year
+    //If it is it changes it so february has 29 days
     if(date.month == 2 && date.day == 29){
         if(is_leap_year(date.year + 2000) == 1){
             days_in_month[1] = 29;
@@ -168,7 +164,6 @@ int is_leap_year(int year){
 date_t id_to_date(char id[]){
     date_t new_date;
     char buffer[10];
-    printf("%s",id);
     substring(id, buffer,0,2);
     new_date.year = atoi(buffer);
     substring(id, buffer,2,2);
@@ -184,6 +179,10 @@ void substring(char const src[],char dest[] ,int start,int len){
     char temp;
     for(;i < len;i++){
         temp = src[i + start];
+        if(temp == '\n' || temp == '\0'){
+            dest[i] = '\0';
+            return;
+        }
         dest[i] = temp;
     }
     dest[i + 1] = '\0';
@@ -200,21 +199,4 @@ int get_weekday(struct tm *time){
     char buffer[5];
     strftime(buffer,sizeof(int),"%w",time);
     return atoi(buffer);
-}
-
-
-
-/***
- *
- * @param arr the array that is searched for value in
- * @param len the length of the array
- * @param value the value to check for in array
- * @return returns 1 if value is in arr; 0 if not
- */
-int contained_in(int arr[], int len, int value){
-    for(int i = 0;i < len;i++){
-        if(arr[i] == value)
-            return 1;
-    }
-    return 0;
 }

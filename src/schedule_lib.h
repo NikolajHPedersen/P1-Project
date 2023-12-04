@@ -5,18 +5,20 @@
 
 #include "file_reader.h"
 
-#define APPOINTMENT_DURARTION 30
-#define DAYS_IN_SCHEDULE 30
+#define APPOINTMENT_DURATION 30
+#define DAYS_IN_SCHEDULE 60
 #define WORKING_DAY 8
 #define START_TIME 8
 
-struct patient{
+struct patient_t{
     unsigned int patient_id;
     char first_name[32];
     char last_name[32];
     int age;
+    char HWG;
     char factors[][32];
 };
+typedef struct patient_t patient_t;
 
 struct date_t{
     int year;

@@ -3,7 +3,7 @@
 
 #include "appointment_system.h"
 #include "file_reader.h"
-#include "schedule_lib.h"
+#include "schedule_parser.h"
 
 //This is the file containing the main function.
 //Most things should be implemented in other files
@@ -26,12 +26,13 @@ int main(void){
 
         scanf("%d",&user_input);
 
+        patient_t test;
+
         switch (user_input) {
             case 0:
-                printf("%s", read_entry_cpr("test_db.txt",32873));
-                char file_name[18] = "test_schedule.txt";
-                create_empty_schedule(file_name);
+                //create_empty_schedule("test_schedule.txt");
 
+                assign_appointment(test, "test_schedule.txt");
                 break;
             case 1:
                 patient_creation(NULL);
@@ -51,7 +52,6 @@ int main(void){
                 printf("Invalid Input");
                 break;
         }
-        printf("What!");
     }
 
     return 0;
