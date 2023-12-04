@@ -218,8 +218,8 @@ int find_entry_cpr(char file_name[], long cpr){
 
 void sort_cpr_database(char file_name[]){
     FILE *fp = fopen(file_name, "r");
-    //FILE *tmp = fopen("tmp_db.txt", "w");
-    if(fp == NULL /*TODO: Add 'or' condition for *tmp as well*/){
+    FILE *tmp = fopen("tmp_db.txt", "w");
+    if(fp == NULL && tmp == NULL){
         printf("Can't open or create files as required. Quiting program...\n");
         exit(EXIT_FAILURE);
     }
@@ -234,6 +234,7 @@ void sort_cpr_database(char file_name[]){
         }
     }
 
+    //TODO: Remove Debug printf when done
     printf("Number of entries: %d\n", number_of_entries);
 
     //Rewind file pointer to starting position
@@ -245,20 +246,43 @@ void sort_cpr_database(char file_name[]){
         exit(EXIT_FAILURE);
     }
 
-    //Find CPR-Number string on a line
-    char buffer[1500];
-    for (int i = 0; i < number_of_entries; ++i) {
-        fgets(buffer, 15, fp);
-        char buf[150];
-        //sscanf(buffer, "%[^,]", buf);
-        printf("Parsed CPR-Number string: %s\n", buffer);
+    //Find CPR-Number string on a line & Converting CPR-Number string into a long long & loading it into an array
+    long long cpr_arr[number_of_entries];
+    for (int i = 0; i <= number_of_entries; ++i) {
+        char buffer[200];
+        fgets(buffer, 200, fp);
+        sscanf(buffer, "id: %lld,", &cpr_arr[i]);
+
+        //TODO: Remove Debug printf when done
+        printf("Parsed CPR-Number string: %lld\n", cpr_arr[i]);
     }
 
-    //Convert CPR-Number string into an int
-    //Load the CPR-Number string from txt file, into an int array
+    //FASE 2: Sort the array using an implementation of Insertion Sort.
+    //TODO: Remove Debug printf when done
+    printf("\n\n");
+    insertion_sort(cpr_arr, number_of_entries);
 
-    //FASE 2: Sort the array using an implementation of Merge Sort.
+    for (int i = 0; i <= number_of_entries; ++i) {
+        //TODO: Remove Debug printf when done
+        printf("Sorted CPR-Number: %lld\n", cpr_arr[i]);
+    }
 
+    //FASE 3: Opdatere CPR-DB
+
+}
+
+void insertion_sort(long long array[], int size_of_array) {
+    //i has a value of 1, so that we can start by comparing the second element in the array to the first
+    for (int i = 1; i <= size_of_array; ++i) {
+        int pointer = i;
+
+        //If the value of the variable that the pointer points to, is less than its predecessor, then we swap them
+        while(array[pointer - 1] > array[pointer] && pointer != 0){
+            index_swap_array(array, pointer, pointer - 1);
+            pointer--;
+        }
+
+    }
 }
 
 //Helper functions
@@ -268,6 +292,12 @@ void copy_file_to_line(FILE *source,FILE *destination,int line){
         fgets(current_line,100,source);
         fputs(current_line,destination);
     }
+}
+
+void index_swap_array(long long* array, int swapper_index, int swappee_index){
+    int swapper_value = array[swapper_index];
+    array[swapper_index] = array[swappee_index];
+    array[swappee_index] = swapper_value;
 }
 
 void copy_file(FILE *source,FILE *destination){

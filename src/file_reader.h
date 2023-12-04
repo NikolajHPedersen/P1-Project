@@ -38,8 +38,11 @@ char *read_entry_cpr(char file_name[], long cpr);
 //Returns line-number of entry containing cpr
 int find_entry_cpr(char file_name[], long cpr);
 
-//Implements a "merge sort"-style algorithm to sort cpr-numbers from lowest to highest
+//Implements a "insertion sort"-style algorithm to sort cpr-numbers from lowest to highest
 void sort_cpr_database(char file_name[]);
+
+//The implementation of the insertion sort algorithm
+void insertion_sort(long long* array, int size_of_array);
 
 //HELPER FUNCTIONS
 
@@ -48,4 +51,7 @@ void copy_file(FILE *source,FILE *destination);
 
 //Copies everything before the line parameter to the destination file (No error handling)
 void copy_file_to_line(FILE *source,FILE *destination, int line);
+
+//Swaps values in an array.
+void index_swap_array(long long array[], int swapper_index, int swappee_index);
 
