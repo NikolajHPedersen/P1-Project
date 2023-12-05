@@ -20,7 +20,7 @@ void append_entry(char file_name[], char message[]){
         exit(EXIT_FAILURE);
     }
 
-    fprintf(fp,"%s\n",message);
+    fprintf(fp,"%s",message);
     fclose(fp);
 }
 
@@ -153,7 +153,7 @@ char *read_entry(char file_name[], int line){
 
     char *check_ptr;
 
-    for(int i = 1;i < line;i++){
+    for(int i = 1;i <= line;i++){
         check_ptr = fgets(buffer,100,fp);
         if(check_ptr == NULL){
             return NULL;
@@ -168,6 +168,7 @@ char *read_entry(char file_name[], int line){
     return strdup(buffer);
 }
 
+//TODO: Fungerer ikke lige helt efter forventning, returnerer forkeret linje.
 char *read_entry_cpr(char file_name[], long cpr){
     FILE *fp = fopen(file_name,"r");
     char cpr_str[10];
@@ -192,6 +193,7 @@ char *read_entry_cpr(char file_name[], long cpr){
 }
 
 //MISC
+//TODO: Fungerer ikke lige helt efter forventning, returnerer forkeret linje.
 int find_entry_cpr(char file_name[], long cpr){
     FILE *fp = fopen(file_name,"r");
     char cpr_str[10];
@@ -218,8 +220,8 @@ int find_entry_cpr(char file_name[], long cpr){
 
 void sort_cpr_database(char file_name[]){
     FILE *fp = fopen(file_name, "r");
-    FILE *tmp = fopen("tmp_db.txt", "w");
-    if(fp == NULL && tmp == NULL){
+    //FILE *tmp = fopen("tmp_db.txt", "w");
+    if(fp == NULL){
         printf("Can't open or create files as required. Quiting program...\n");
         exit(EXIT_FAILURE);
     }
@@ -256,6 +258,7 @@ void sort_cpr_database(char file_name[]){
         //TODO: Remove Debug printf when done
         printf("Parsed CPR-Number string: %lld\n", cpr_arr[i]);
     }
+    fclose(fp);
 
     //FASE 2: Sort the array using an implementation of Insertion Sort.
     //TODO: Remove Debug printf when done
@@ -268,7 +271,17 @@ void sort_cpr_database(char file_name[]){
     }
 
     //FASE 3: Opdatere CPR-DB
-
+    //Går gennem hele listen for hver enkelt linje i listen/DB
+    for (int i = 0; i <= number_of_entries; ++i) {
+        for (int j = 0; j <= number_of_entries; ++j) {
+            long long val;
+            char* line_to_check = read_entry("test_db.txt", j);
+            sscanf(line_to_check, "id: %lld", &val);
+            if(val == cpr_arr[i]){
+                insert_entry("temp_db.txt", read_entry("test_db.txt", j),j);
+            }
+        }
+    }
 }
 
 void insertion_sort(long long array[], int size_of_array) {

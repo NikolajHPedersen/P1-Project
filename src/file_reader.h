@@ -14,6 +14,8 @@ struct patient{
 //adds a string to the end of text-file
 void append_entry(char file_name[], char message[]);
 
+
+
 //adds a string at the line number specified (No error handling)
 void insert_entry(char file_name[], char message[], int line_number);
 
