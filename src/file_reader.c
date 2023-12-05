@@ -20,7 +20,7 @@ void append_entry(char file_name[], char message[]){
         exit(EXIT_FAILURE);
     }
 
-    fprintf(fp,"%s",message);
+    fprintf(fp,"%s\n",message);
     fclose(fp);
 }
 
