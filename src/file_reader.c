@@ -20,7 +20,7 @@ void append_entry(char file_name[], char message[]){
         exit(EXIT_FAILURE);
     }
 
-    fprintf(fp,"%s\n",message);
+    fprintf(fp,"%s",message);
     fclose(fp);
 }
 
@@ -278,7 +278,7 @@ void sort_cpr_database(char file_name[]){
             char* line_to_check = read_entry("test_db.txt", j);
             sscanf(line_to_check, "id: %lld", &val);
             if(val == cpr_arr[i]){
-                insert_entry("temp_db.txt", read_entry("test_db.txt", j),j);
+                append_entry("temp_db.txt", read_entry("test_db.txt", j));
             }
         }
     }
