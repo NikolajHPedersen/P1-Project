@@ -15,10 +15,7 @@
 //WRITE & REMOVE
 void append_entry(char file_name[], char message[]){
     FILE *fp = fopen(file_name,"a");
-    if(fp == NULL){
-        printf("Something went wrong");
-        exit(EXIT_FAILURE);
-    }
+    check_fopen_success(fp);
 
     fprintf(fp,"%s\n",message);
     fclose(fp);
@@ -146,6 +143,12 @@ void remove_entry(char file_name[], int line){
 }
 
 //READ
+char *find_and_read_patient_line_binary(char file_name[], unsigned int cpr){
+    FILE* fp = fopen(file_name, "r");
+    check_fopen_success(fp);
+
+
+}
 
 char *read_entry(char file_name[], int line){
     FILE *fp = fopen(file_name,"r");
@@ -167,7 +170,6 @@ char *read_entry(char file_name[], int line){
     fclose(fp);
     return strdup(buffer);
 }
-
 
 char *read_entry_cpr(char file_name[], long cpr){
     FILE *fp = fopen(file_name,"r");
@@ -193,7 +195,6 @@ char *read_entry_cpr(char file_name[], long cpr){
 }
 
 //MISC
-//TODO: Fungerer ikke lige helt efter forventning, returnerer forkeret linje.
 int find_entry_cpr(char file_name[], long cpr){
     FILE *fp = fopen(file_name,"r");
     char cpr_str[10];
@@ -218,47 +219,34 @@ int find_entry_cpr(char file_name[], long cpr){
     return count;
 }
 
-void sort_cpr_database(char file_name[]){
-    FILE *fp = fopen(file_name, "r");
-    if(fp == NULL){
-        printf("Can't open or create files as required. Quiting program...\n");
-        exit(EXIT_FAILURE);
-    }
+void retrieve_cpr_as_arr(char file_name[], int number_of_entries, unsigned int* output_arr){
+    //Find CPR-Number string on a line & Converting CPR-Number string into an unsigned int & loading it into an array
+    FILE* fp = fopen(file_name, "r");
+    check_fopen_success(fp);
 
+    for (int i = 0; i <= number_of_entries; ++i) {
+        char buffer[200];
+        fgets(buffer, 200, fp);
+        sscanf(buffer, "id: %u,", &output_arr[i]);
+
+        //TODO: Remove Debug printf when done
+        printf("Parsed CPR-Number string: %u\n", output_arr[i]);
+    }
+    fclose(fp);
+}
+
+void sort_cpr_database(char file_name[]){
     //FASE 1: Importing CPR-Numbers into an array
 
-    //Determine how many patient entries there are in txt file, by checking the amount of '\n'
-    int number_of_entries = 0;
-    while(!feof(fp)){
-        //Also checking if the file ends after the '\n', so that it does'nt count
-        if(fgetc(fp) == '\n' && fgetc(fp) != EOF){
-            number_of_entries++;
-        }
-    }
+    //Get total amount of entries in CPR DB
+    int number_of_entries = get_number_of_entries_in_cpr(file_name);
 
     //TODO: Remove Debug printf when done
     printf("Number of entries: %d\n", number_of_entries);
 
-    //Rewind file pointer to starting position
-    /*Using fseek, one can set the location of the file position indicator to a specific location,
-     *and check if any errors occured. fseek returns a non-zero value if there is an error.
-     * If its succesful it returns zero */
-    if(fseek(fp, 0L, SEEK_SET) != 0){
-        printf("An error has occured during database loading. Quitting program...\n");
-        exit(EXIT_FAILURE);
-    }
-
-    //Find CPR-Number string on a line & Converting CPR-Number string into a long long & loading it into an array
+    //Get all the CPR-Numbers as an array
     unsigned int cpr_arr[number_of_entries];
-    for (int i = 0; i <= number_of_entries; ++i) {
-        char buffer[200];
-        fgets(buffer, 200, fp);
-        sscanf(buffer, "id: %u,", &cpr_arr[i]);
-
-        //TODO: Remove Debug printf when done
-        printf("Parsed CPR-Number string: %u\n", cpr_arr[i]);
-    }
-    fclose(fp);
+    retrieve_cpr_as_arr(file_name, number_of_entries, cpr_arr);
 
     //FASE 2: Sort the array using an implementation of Insertion Sort.
     //TODO: Remove Debug printf when done
@@ -275,9 +263,10 @@ void sort_cpr_database(char file_name[]){
     //Goes through the entire list for every line in the list/DB
     for (int i = 0; i <= number_of_entries; ++i) {
         for (int j = 0; j <= number_of_entries; ++j) {
-            long long val;
+            unsigned int val;
             char* line_to_check = read_entry("test_db.txt", j);
-            sscanf(line_to_check, "id: %lld", &val);            if(val == cpr_arr[i]){
+            sscanf(line_to_check, "id: %u", &val);
+            if(val == cpr_arr[i]){
                 //Removing '\n' from the string
                 int newline_index = find_newline_index(line_to_check);
                 if(newline_index != -1){
@@ -310,11 +299,35 @@ void insertion_sort(unsigned int array[], int size_of_array) {
 }
 
 //Helper functions
+int get_number_of_entries_in_cpr(char file_name[]){
+    //Determine how many patient entries there are in txt file, by checking the amount of '\n'
+    FILE *db_fp = fopen(file_name, "r");
+    check_fopen_success(db_fp);
+
+    int number_of_entries = 0;
+    while(!feof(db_fp)){
+        //Also checking if the file ends after the '\n', so that it does'nt count
+        if(fgetc(db_fp) == '\n' && fgetc(db_fp) != EOF){
+            number_of_entries++;
+        }
+    }
+    fclose(db_fp);
+
+    return number_of_entries;
+}
+
 void copy_file_to_line(FILE *source,FILE *destination,int line){
     char current_line[100];
     for(int i = 0;i < line;i++){
         fgets(current_line,100,source);
         fputs(current_line,destination);
+    }
+}
+
+void check_fopen_success(FILE* fp){
+    if(fp == NULL){
+        printf("Can't open or create files as required. Quiting program...\n");
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -354,10 +367,7 @@ int find_newline_index(char* string){
 
 void uncorrupt_after_append(char* file_name){
     FILE* fp = fopen(file_name, "r+");
-    if(fp == NULL){
-        printf("Can't open or create files as required. Quiting program...\n");
-        exit(EXIT_FAILURE);
-    }
+    check_fopen_success(fp);
 
     //Set file location pointer to end - 1
     if(fseek(fp, -1L, SEEK_END) != 0){

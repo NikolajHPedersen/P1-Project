@@ -2,13 +2,13 @@
 #include <stdio.h>
 
 struct patient{
-    int patient_id;
+    unsigned int patient_id;
     char first_name[32];
     char last_name[32];
     int age;
     char factors[][32];
 
-};
+}; typedef struct patient patient;
 //WRITE/REMOVE functionality
 
 //adds a string to the end of text-file
@@ -29,6 +29,9 @@ void remove_entry(char file_name[], int line);
 
 //READ functionality
 
+//Find
+char *find_and_read_patient_line_binary(char file_name[], unsigned int cpr);
+
 //Returns the string on the line number given. Returns null if string is out-of-bounds
 char *read_entry(char file_name[], int line);
 
@@ -39,7 +42,11 @@ char *read_entry_cpr(char file_name[], long cpr);
 //MISC functionality
 
 //Returns line-number of entry containing cpr
+//Works only with a VALID CPR number
 int find_entry_cpr(char file_name[], long cpr);
+
+//Retrieves all the CPR-Numbers in the CPR-DB and returns them to an array
+void retrieve_cpr_as_arr(char file_name[], int number_of_entries, unsigned int* output_arr);
 
 //Implements a "insertion sort"-style algorithm to sort cpr-numbers from lowest to highest
 void sort_cpr_database(char file_name[]);
@@ -49,11 +56,17 @@ void insertion_sort(unsigned int array[], int size_of_array);
 
 //HELPER FUNCTIONS
 
+//Gets total number of entries in CPR DB
+int get_number_of_entries_in_cpr(char file_name[]);
+
 //Copies the contents of the source file to the destination file (No error handling)
 void copy_file(FILE *source,FILE *destination);
 
 //Copies everything before the line parameter to the destination file (No error handling)
 void copy_file_to_line(FILE *source,FILE *destination, int line);
+
+//Checks if a file was opened correctly
+void check_fopen_success(FILE* fp);
 
 //Swaps values in an array.
 void index_swap_array(unsigned int array[], int swapper_index, int swappee_index);
