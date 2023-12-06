@@ -61,3 +61,5 @@ void index_swap_array(long long array[], int swapper_index, int swappee_index);
 //Finds the '\n' in a string and returns the index of it
 int find_newline_index(char* string);
 
+//Removes the unnecessary '\n' at the end
+void uncorrupt_after_append(char* file_name);

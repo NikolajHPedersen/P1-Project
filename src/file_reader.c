@@ -230,7 +230,8 @@ void sort_cpr_database(char file_name[]){
     //Determine how many patient entries there are in txt file, by checking the amount of '\n'
     int number_of_entries = 0;
     while(!feof(fp)){
-        if(fgetc(fp) == '\n'){
+        //Also checking if the file ends after the '\n', so that it does'nt count
+        if(fgetc(fp) == '\n' && fgetc(fp) != EOF){
             number_of_entries++;
         }
     }
@@ -269,15 +270,14 @@ void sort_cpr_database(char file_name[]){
         printf("Sorted CPR-Number: %lld\n", cpr_arr[i]);
     }
 
-    printf("%s", read_entry_cpr("test_db.txt", 5));
+
     //FASE 3: Update CPR-DB
     //Goes through the entire list for every line in the list/DB
     for (int i = 0; i <= number_of_entries; ++i) {
         for (int j = 0; j <= number_of_entries; ++j) {
             long long val;
             char* line_to_check = read_entry("test_db.txt", j);
-            sscanf(line_to_check, "id: %lld", &val);
-            if(val == cpr_arr[i]){
+            sscanf(line_to_check, "id: %lld", &val);            if(val == cpr_arr[i]){
                 //Removing '\n' from the string
                 int newline_index = find_newline_index(line_to_check);
                 if(newline_index != -1){
@@ -288,6 +288,8 @@ void sort_cpr_database(char file_name[]){
             }
         }
     }
+    //uncorrupt_after_append("tmp_db.txt");
+
     remove(file_name);
     rename("tmp_db.txt", file_name);
 
@@ -338,10 +340,36 @@ void copy_file(FILE *source,FILE *destination){
 }
 
 int find_newline_index(char* string){
+    if(string == NULL){
+        return -1;
+    }
+
     for (int i = 0; i < strlen(string); ++i) {
         if(string[i] == '\n'){
             return i;
         }
     }
     return -1;
+}
+
+void uncorrupt_after_append(char* file_name){
+    FILE* fp = fopen(file_name, "r+");
+    if(fp == NULL){
+        printf("Can't open or create files as required. Quiting program...\n");
+        exit(EXIT_FAILURE);
+    }
+
+    //Set file location pointer to end - 1
+    if(fseek(fp, -1L, SEEK_END) != 0){
+        printf("Could'nt uncorrupt after append....");
+        exit(EXIT_FAILURE);
+    }
+
+    char c;
+    if((c = fgetc(fp)) == '\n'){
+        fseek(fp, -1L, SEEK_END);
+        fputc('\0', fp);
+    }
+
+    fclose(fp);
 }
