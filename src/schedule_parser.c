@@ -83,16 +83,15 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     date_t current_day = next_day;
 
     for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
-        for(int j = range[0];j < range[1];j++){
+        for(int j = range[0];j <= range[1];j++){
             current_day = future_date(current_day,j);
             date_to_id(current_day, cpr);
             id = (long)atoi(cpr);
-            fclose(fp);
-            line = find_entry_cpr(file_name,id);
-            if(line == -1){
-                continue;
-            }
-            fopen(file_name,"r");
+            rewind(fp);
+            find_block_id(fp,id);
+            fgets(current_line,100,fp);
+            printf("%s",current_line);
+            /*
             go_to_line(line + i,fp,current_line);
 
             fgets(current_line,100,fp);
@@ -102,6 +101,7 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
                 substring(current_line,result_id,3,6);
                 break;
             }
+            */
         }
     }
     fclose(fp);
@@ -166,4 +166,27 @@ void go_to_line(int line,FILE *fp,char *current_line){
     for(int i = 1;i <= line;i++){
         fgets(current_line,100,fp);
     }
+}
+
+int find_block_id(FILE *fp, long block_id){
+    char cpr_str[10];
+    sprintf(cpr_str, "%ld", block_id);
+
+    char buffer[100] = "";
+
+    char *check_ptr;
+
+    int count = 1;
+
+    for(;;count++){
+        check_ptr = fgets(buffer,100,fp);
+        if(check_ptr == NULL){
+            return -1;
+        }
+        if(strstr(buffer, cpr_str)){
+            break;
+        }
+    }
+
+    return count;
 }

@@ -55,6 +55,7 @@ int main(void){
                 assign_appointment(test, "test_schedule.txt");
                 assign_appointment(test2, "test_schedule.txt");
                 assign_appointment(test3, "test_schedule.txt");
+                
                 break;
             case 1:
                 patient_creation(NULL);

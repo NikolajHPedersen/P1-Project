@@ -17,3 +17,5 @@ date_t future_date(date_t date, int time_skip);
 void assign_appointment_to_patient(char file_name[],patient_t patient, char block_id[]);
 
 void string_helper(char appointment_id[],char cpr[],char dest[]);
+
+int find_block_id(FILE *fp, long block_id);
