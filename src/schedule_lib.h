@@ -64,6 +64,8 @@ date_t id_to_date(char id[]);
 
 void date_to_id(date_t date, char output[]);
 
+//void add_day(date_t *date);
+
 int get_weekday(struct tm *time);
 
 void substring(char const src[],char dest[] ,int start,int len);

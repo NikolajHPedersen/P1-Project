@@ -26,13 +26,35 @@ int main(void){
 
         scanf("%d",&user_input);
 
-        patient_t test;
+        patient_t test = {
+                2509029999,
+                "Jan",
+                "Kongsberg",
+                21,
+                'A'
+        };
+        patient_t test2 = {
+                2509039999,
+                "Jan",
+                "Kongsberg",
+                20,
+                'B'
+        };
+        patient_t test3 = {
+                2509021111,
+                "Jan",
+                "Kongsberg",
+                21,
+                'B'
+        };
 
         switch (user_input) {
             case 0:
                 //create_empty_schedule("test_schedule.txt");
 
                 assign_appointment(test, "test_schedule.txt");
+                assign_appointment(test2, "test_schedule.txt");
+                assign_appointment(test3, "test_schedule.txt");
                 break;
             case 1:
                 patient_creation(NULL);
