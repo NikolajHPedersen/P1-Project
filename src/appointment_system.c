@@ -9,7 +9,6 @@ int patient_creation(unsigned int const *CPR){
     char first_name[32] = "";
     char last_name[32] = "";
 
-
     if(CPR == NULL)
         input(" %lld",&internal_CPR,"Enter patient CPR: \n");
     else
