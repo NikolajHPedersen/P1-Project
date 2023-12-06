@@ -270,8 +270,8 @@ void sort_cpr_database(char file_name[]){
     }
 
     printf("%s", read_entry_cpr("test_db.txt", 5));
-    //FASE 3: Opdatere CPR-DB
-    //Går gennem hele listen for hver enkelt linje i listen/DB
+    //FASE 3: Update CPR-DB
+    //Goes through the entire list for every line in the list/DB
     for (int i = 0; i <= number_of_entries; ++i) {
         for (int j = 0; j <= number_of_entries; ++j) {
             long long val;
