@@ -249,14 +249,14 @@ void sort_cpr_database(char file_name[]){
     }
 
     //Find CPR-Number string on a line & Converting CPR-Number string into a long long & loading it into an array
-    long long cpr_arr[number_of_entries];
+    unsigned int cpr_arr[number_of_entries];
     for (int i = 0; i <= number_of_entries; ++i) {
         char buffer[200];
         fgets(buffer, 200, fp);
-        sscanf(buffer, "id: %lld,", &cpr_arr[i]);
+        sscanf(buffer, "id: %u,", &cpr_arr[i]);
 
         //TODO: Remove Debug printf when done
-        printf("Parsed CPR-Number string: %lld\n", cpr_arr[i]);
+        printf("Parsed CPR-Number string: %u\n", cpr_arr[i]);
     }
     fclose(fp);
 
@@ -295,7 +295,7 @@ void sort_cpr_database(char file_name[]){
 
 }
 
-void insertion_sort(long long array[], int size_of_array) {
+void insertion_sort(unsigned int array[], int size_of_array) {
     //i has a value of 1, so that we can start by comparing the second element in the array to the first
     for (int i = 1; i <= size_of_array; ++i) {
         int pointer = i;
@@ -318,7 +318,7 @@ void copy_file_to_line(FILE *source,FILE *destination,int line){
     }
 }
 
-void index_swap_array(long long* array, int swapper_index, int swappee_index){
+void index_swap_array(unsigned int* array, int swapper_index, int swappee_index){
     int swapper_value = array[swapper_index];
     array[swapper_index] = array[swappee_index];
     array[swappee_index] = swapper_value;

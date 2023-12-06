@@ -45,7 +45,7 @@ int find_entry_cpr(char file_name[], long cpr);
 void sort_cpr_database(char file_name[]);
 
 //The implementation of the insertion sort algorithm
-void insertion_sort(long long* array, int size_of_array);
+void insertion_sort(unsigned int array[], int size_of_array);
 
 //HELPER FUNCTIONS
 
@@ -56,7 +56,7 @@ void copy_file(FILE *source,FILE *destination);
 void copy_file_to_line(FILE *source,FILE *destination, int line);
 
 //Swaps values in an array.
-void index_swap_array(long long array[], int swapper_index, int swappee_index);
+void index_swap_array(unsigned int array[], int swapper_index, int swappee_index);
 
 //Finds the '\n' in a string and returns the index of it
 int find_newline_index(char* string);
