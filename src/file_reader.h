@@ -33,6 +33,7 @@ void remove_entry(char file_name[], int line);
 char *read_entry(char file_name[], int line);
 
 //Returns the string with containing a certain cpr
+//Works only with VALID CPR numbers
 char *read_entry_cpr(char file_name[], long cpr);
 
 //MISC functionality
@@ -56,4 +57,7 @@ void copy_file_to_line(FILE *source,FILE *destination, int line);
 
 //Swaps values in an array.
 void index_swap_array(long long array[], int swapper_index, int swappee_index);
+
+//Finds the '\n' in a string and returns the index of it
+int find_newline_index(char* string);
 

@@ -20,7 +20,7 @@ void append_entry(char file_name[], char message[]){
         exit(EXIT_FAILURE);
     }
 
-    fprintf(fp,"%s",message);
+    fprintf(fp,"%s\n",message);
     fclose(fp);
 }
 
@@ -168,7 +168,7 @@ char *read_entry(char file_name[], int line){
     return strdup(buffer);
 }
 
-//TODO: Fungerer ikke lige helt efter forventning, returnerer forkeret linje.
+
 char *read_entry_cpr(char file_name[], long cpr){
     FILE *fp = fopen(file_name,"r");
     char cpr_str[10];
@@ -220,7 +220,6 @@ int find_entry_cpr(char file_name[], long cpr){
 
 void sort_cpr_database(char file_name[]){
     FILE *fp = fopen(file_name, "r");
-    //FILE *tmp = fopen("tmp_db.txt", "w");
     if(fp == NULL){
         printf("Can't open or create files as required. Quiting program...\n");
         exit(EXIT_FAILURE);
@@ -270,6 +269,7 @@ void sort_cpr_database(char file_name[]){
         printf("Sorted CPR-Number: %lld\n", cpr_arr[i]);
     }
 
+    printf("%s", read_entry_cpr("test_db.txt", 5));
     //FASE 3: Opdatere CPR-DB
     //Går gennem hele listen for hver enkelt linje i listen/DB
     for (int i = 0; i <= number_of_entries; ++i) {
@@ -278,10 +278,19 @@ void sort_cpr_database(char file_name[]){
             char* line_to_check = read_entry("test_db.txt", j);
             sscanf(line_to_check, "id: %lld", &val);
             if(val == cpr_arr[i]){
-                append_entry("temp_db.txt", read_entry("test_db.txt", j));
+                //Removing '\n' from the string
+                int newline_index = find_newline_index(line_to_check);
+                if(newline_index != -1){
+                    line_to_check[newline_index] = '\0';
+                }
+
+                append_entry("tmp_db.txt", line_to_check);
             }
         }
     }
+    remove(file_name);
+    rename("tmp_db.txt", file_name);
+
 }
 
 void insertion_sort(long long array[], int size_of_array) {
@@ -326,4 +335,13 @@ void copy_file(FILE *source,FILE *destination){
         fputs(current_line,destination);
     }
 
+}
+
+int find_newline_index(char* string){
+    for (int i = 0; i < strlen(string); ++i) {
+        if(string[i] == '\n'){
+            return i;
+        }
+    }
+    return -1;
 }
