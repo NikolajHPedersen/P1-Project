@@ -3,6 +3,7 @@
 
 #include "appointment_system.h"
 #include "file_reader.h"
+#include "schedule_parser.h"
 
 //This is the file containing the main function.
 //Most things should be implemented in other files
@@ -19,6 +20,7 @@ int main(void){
 
     int user_input;
     int loop = 1;
+
     while(loop == 1){
         printf("Which submenu do you wish to access?\n");
         printf("%s[0], %s[1], %s[2], %s[3], %s[4], %s[5]\n",
@@ -26,9 +28,36 @@ int main(void){
 
         scanf("%d",&user_input);
 
+        patient_t test = {
+                2509029999,
+                "Jan",
+                "Kongsberg",
+                21,
+                'A'
+        };
+        patient_t test2 = {
+                2509039999,
+                "Jan",
+                "Kongsberg",
+                20,
+                'B'
+        };
+        patient_t test3 = {
+                2509021111,
+                "Jan",
+                "Kongsberg",
+                21,
+                'B'
+        };
+
         switch (user_input) {
             case 0:
-                printf("%s", read_entry_cpr("test_db.txt",32873));
+                create_empty_schedule("test_schedule.txt");
+
+                assign_appointment(test, "test_schedule.txt");
+                assign_appointment(test2, "test_schedule.txt");
+                assign_appointment(test3, "test_schedule.txt");
+                
                 break;
             case 1:
                 patient_creation(NULL);
@@ -39,6 +68,7 @@ int main(void){
                 printf("%d", find_entry_cpr("test_db.txt",32872));
                 break;
             case 3:
+
                 break;
             case 4:
                 printf("Enter patient CPR-Number: ");

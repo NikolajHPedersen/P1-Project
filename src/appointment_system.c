@@ -4,14 +4,13 @@
 #include <stdio.h>
 #include <string.h>
 
-int patient_creation(long const *CPR){
-    long internal_CPR;
-    char first_name[32];
-    char last_name[32];
-
+int patient_creation(unsigned int const *CPR){
+    unsigned int internal_CPR;
+    char first_name[32] = "";
+    char last_name[32] = "";
 
     if(CPR == NULL)
-        input(" %ld",&internal_CPR,"Enter patient CPR: \n");
+        input(" %lld",&internal_CPR,"Enter patient CPR: \n");
     else
         internal_CPR = *CPR;
 
@@ -19,10 +18,10 @@ int patient_creation(long const *CPR){
     input(" %s",&last_name,"Enter patient last name: \n");
 
     char buffer[64];
-    sprintf(buffer,"id: %010ld,first_name: %s,last_name: %s",internal_CPR,first_name, last_name);
+    sprintf(buffer,"id: %010u,first_name: %s,last_name: %s",internal_CPR,first_name, last_name);
 
-    //append_entry("test_db.txt",buffer);
-    insert_entry("test_db.txt",buffer,2);
+    append_entry("test_db.txt",buffer);
+    //insert_entry("test_db.txt",buffer,2);
 
     return 0;
 }

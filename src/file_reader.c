@@ -26,6 +26,10 @@ void change_entry(char file_name[], char message[], int line_number){
     //Open the file in which the entry should be inserted and a temp file
     FILE *fp = fopen(file_name,"r");
     FILE *temp = fopen("temp.txt","w");
+    if(fp == NULL){
+        printf("Something went wrong");
+        exit(EXIT_FAILURE);
+    }
 
     //Copy the contents of the main file to the temp file until the line
     //Where the entry is to be changed
@@ -49,6 +53,10 @@ void change_entry(char file_name[], char message[], int line_number){
 
     fp = fopen(file_name,"w");
     temp = fopen("temp.txt","r");
+    if(fp == NULL){
+        printf("Something went wrong");
+        exit(EXIT_FAILURE);
+    }
 
     //Copy everything from the temp file to the main file
     copy_file(temp,fp);
@@ -61,6 +69,10 @@ void change_entry(char file_name[], char message[], int line_number){
 
 void change_entry_v2(char file_name[], char message[], int line_number){
     FILE *fp = fopen(file_name,"r+");
+    if(fp == NULL){
+        printf("Something went wrong");
+        exit(EXIT_FAILURE);
+    }
 
     char current_line[50];
 
@@ -77,6 +89,10 @@ void insert_entry(char file_name[], char message[], int line_number){
     //Open the file in which the entry should be inserted and a temp file
     FILE *fp = fopen(file_name,"r");
     FILE *temp = fopen("temp.txt","w");
+    if(fp == NULL){
+        printf("Something went wrong");
+        exit(EXIT_FAILURE);
+    }
 
     //Copy the contents of the main file to the temp file until the line
     //Where the entry is to be inserted
@@ -104,7 +120,6 @@ void insert_entry(char file_name[], char message[], int line_number){
     fclose(temp);
     remove("temp.txt");
     fclose(fp);
-
 }
 
 void remove_entry(char file_name[], int line){
