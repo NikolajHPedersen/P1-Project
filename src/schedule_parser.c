@@ -36,8 +36,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
         line = find_entry_cpr(file_name,id);
     }
 
-
-
     FILE *fp = fopen(file_name,"r");
 
     char current_line[100];
@@ -63,16 +61,16 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     }
     switch(patient.HWG){
         case 'A':
-            range[0] = 2;
-            range[1] = 3;
+            range[0] = 1;
+            range[1] = 2;
             break;
         case 'B':
-            range[0] = 4;
-            range[1] = 10;
+            range[0] = 3;
+            range[1] = 9;
             break;
         case 'C':
-            range[0] = 11;
-            range[1] = 30;
+            range[0] = 10;
+            range[1] = 29;
             break;
         default:
             printf("No assigned HWG");
@@ -88,20 +86,20 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
             date_to_id(current_day, cpr);
             id = (long)atoi(cpr);
             rewind(fp);
-            find_block_id(fp,id);
-            fgets(current_line,100,fp);
-            printf("%s",current_line);
-            /*
-            go_to_line(line + i,fp,current_line);
+            line = find_block_id(fp,id);
+            if(line == -1){
+                continue;
+            }
 
             fgets(current_line,100,fp);
+            printf("%s",current_line);
             substring(current_line,cpr,15,10);
 
             if(strcmp(cpr,"0") == 0){
                 substring(current_line,result_id,3,6);
                 break;
             }
-            */
+            current_day = next_day;
         }
     }
     fclose(fp);

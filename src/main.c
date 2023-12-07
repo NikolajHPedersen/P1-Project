@@ -50,7 +50,7 @@ int main(void){
 
         switch (user_input) {
             case 0:
-                //create_empty_schedule("test_schedule.txt");
+                create_empty_schedule("test_schedule.txt");
 
                 assign_appointment(test, "test_schedule.txt");
                 assign_appointment(test2, "test_schedule.txt");
