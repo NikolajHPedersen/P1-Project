@@ -239,8 +239,7 @@ void retrieve_cpr_as_arr(char file_name[], int number_of_entries, unsigned int* 
         fgets(buffer, 200, fp);
         sscanf(buffer, "id: %u,", &output_arr[i]);
 
-        //TODO: Remove Debug printf when done
-        printf("Parsed CPR-Number string: %u\n", output_arr[i]);
+
     }
     fclose(fp);
 }
@@ -251,22 +250,13 @@ void sort_cpr_database(char file_name[]){
     //Get total amount of entries in CPR DB
     int number_of_entries = get_number_of_entries_in_cpr(file_name);
 
-    //TODO: Remove Debug printf when done
-    printf("Number of entries: %d\n", number_of_entries);
 
     //Get all the CPR-Numbers as an array
     unsigned int cpr_arr[number_of_entries];
     retrieve_cpr_as_arr(file_name, number_of_entries, cpr_arr);
 
     //FASE 2: Sort the array using an implementation of Insertion Sort.
-    //TODO: Remove Debug printf when done
-    printf("\n\n");
     insertion_sort(cpr_arr, number_of_entries);
-
-    for (int i = 0; i <= number_of_entries; ++i) {
-        //TODO: Remove Debug printf when done
-        printf("Sorted CPR-Number: %lld\n", cpr_arr[i]);
-    }
 
 
     //FASE 3: Update CPR-DB
