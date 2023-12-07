@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 //This file (poorly) implements the ability to read and write to text files
 //These are all massively inefficient but there might not be better ways to do it with text files
@@ -144,10 +145,19 @@ void remove_entry(char file_name[], int line){
 
 //READ
 char *find_and_read_patient_line_binary(char file_name[], unsigned int cpr){
-    FILE* fp = fopen(file_name, "r");
-    check_fopen_success(fp);
+    //FASE 1: Fetch all of the CPR-Numbers as an array
+    int number_of_entries = get_number_of_entries_in_cpr(file_name);
 
+    unsigned int cpr_arr[number_of_entries];
+    retrieve_cpr_as_arr(file_name, number_of_entries, cpr_arr);
 
+    //FASE 2: Search for the index of the CPR-Number in the array using an implementation of binary search
+    int patient_line_index = binary_search(cpr_arr, cpr, 0, number_of_entries);
+    if(patient_line_index != -1){
+        return read_entry(file_name, patient_line_index);
+    }
+
+    return "CPR Not Found!";
 }
 
 char *read_entry(char file_name[], int line){
@@ -296,6 +306,36 @@ void insertion_sort(unsigned int array[], int size_of_array) {
         }
 
     }
+}
+
+int binary_search(unsigned int* arr_to_search, unsigned int target_num, int lower_bound_of_arr, int highest_bound_of_arr){
+    //Finding the half point of the array / Finding the median of the array indexes
+    int mid = floor((lower_bound_of_arr + highest_bound_of_arr) / 2);
+
+    //We check if the mid-index has the target_cpr in the array
+    if(arr_to_search[mid] == target_num){
+        return mid;
+    }
+
+    //If we only have one index left, and it isn't the target, we return -1, to show that the value isn't present
+    if((lower_bound_of_arr == mid && highest_bound_of_arr == mid) && arr_to_search[mid] != target_num){
+        return -1;
+    }
+
+    //We check if the value at the mid-index is less then the target_cpr
+    if(arr_to_search[mid] < target_num){
+        //We set the lower_bound_of_arr to the mid index, and then repeat the process
+        lower_bound_of_arr = mid + 1;
+        return binary_search(arr_to_search, target_num, lower_bound_of_arr, highest_bound_of_arr);
+    }
+
+    //We check if the value at the mid index is more then the target_cpr
+    if(arr_to_search[mid] > target_num){
+        //We set the higher_bound_of_arr to the mid index, and then repeat the process
+        highest_bound_of_arr = mid - 1;
+        return binary_search(arr_to_search, target_num, lower_bound_of_arr, highest_bound_of_arr);
+    }
+
 }
 
 //Helper functions

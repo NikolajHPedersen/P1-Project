@@ -29,7 +29,7 @@ void remove_entry(char file_name[], int line);
 
 //READ functionality
 
-//Find
+//Find and read the patient line of a specific patient, found by CPR-Number, using binary search
 char *find_and_read_patient_line_binary(char file_name[], unsigned int cpr);
 
 //Returns the string on the line number given. Returns null if string is out-of-bounds
@@ -53,6 +53,9 @@ void sort_cpr_database(char file_name[]);
 
 //The implementation of the insertion sort algorithm
 void insertion_sort(unsigned int array[], int size_of_array);
+
+//The implementation of the binary search algorithm
+int binary_search(unsigned int* arr_to_search, unsigned int target_num, int lower_bound_of_arr, int highest_bound_of_arr);
 
 //HELPER FUNCTIONS
 
