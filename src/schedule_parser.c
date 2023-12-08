@@ -39,8 +39,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
         line = find_entry_cpr(file_name,id);
     }
 
-
-
     FILE *fp = fopen(file_name,"r");
 
     char current_line[100];
@@ -83,7 +81,7 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 
     date_t current_day = next_day;
 
-    date_t *valid_dates = malloc(sizeof(date_t)*(range[1] - range[0] + 1));
+    date_t valid_dates[range[1] - range[0] + 1];
 
     int iter = 0, index = 0, dest;
     char temp_id[100] = " ";
@@ -95,44 +93,79 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
         dest = -1;
         //current_day = future_date(next_day,range[0] + iter);
         current_day = add_day(current_day);
-        printf("%02d ",current_day.day);
+
         date_to_id(current_day,temp_id);
-        printf("%s ",temp_id);
-        sprintf(iter_line,"## %s",temp_id);
+
+        //sprintf(iter_line,"## %s",temp_id);
         rewind(fp);
         while(dest == -1){
             check_ptr = fgets(current_line,100,fp);
             if(check_ptr == NULL){
                 break;
             }
-            else if(strcmp(iter_line,current_line) == 0){
+            else if(strstr(current_line,temp_id) == 0){
                 valid_dates[index] = current_day;
 
                 index++;
                 dest = 0;
             }
         }
-        if(current_day.day - next_day.day == range[1]){
-            break;
-        }
         iter++;
 
     }
 
+    char current_id[100] = " ";
+    char c_line[100] = " ";
 
-    for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
-        for(int j = range[0];j <= range[1];j++){
+    char *n_check_pointer;
+    int end = 0;
 
 
+    if(index != 0){
+        for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
+            for(int j = 0; j <= index;j++){
+                date_to_id(valid_dates[j],current_id);
+                printf("%s ",current_id);
+
+                sprintf(c_line,"## %s",current_id);
+                rewind(fp);
+                printf("%s ", c_line);
+                int k = 0;
+                while(k == 0){
+                    n_check_pointer = fgets(current_line,100,fp);
+                    if(strstr(current_line,c_line) != NULL){
+                        k = 1;
+                    }
+                    if(n_check_pointer == NULL){
+                        k = 1;
+                    }
+                }
+                if(n_check_pointer == NULL){
+                    continue;
+                }
+                for(int t = 1;t < i;t++){
+                    fgets(current_line,100,fp);
+                }
+                fgets(current_line,100,fp);
+                substring(current_line,cpr,15,10);
+                if(strcmp(cpr,"0") == 0){
+                    substring(current_line,result_id,3,6);
+                    end = 1;
+                    break;
+                }
+            }
+            if(end != 0){
+                break;
+            }
         }
     }
-    free(valid_dates);
+    printf("|%s|",result_id);
     fclose(fp);
     if(strcmp(result_id," ")!= 0){
         return id_to_date(result_id);
     }
 
-
+    return next_day;
 }
 
 
