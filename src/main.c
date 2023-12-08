@@ -9,7 +9,7 @@
 //Most things should be implemented in other files
 
 int main(void){
-    sort_cpr_database("test_db.txt");
+    //sort_cpr_database("test_db.txt");
     char menu_items[][32] = {
                         "Appointment creation",
                         "Patient creation",
@@ -52,7 +52,7 @@ int main(void){
 
         switch (user_input) {
             case 0:
-                create_empty_schedule("test_schedule.txt");
+                //create_empty_schedule("test_schedule.txt");
 
                 assign_appointment(test, "test_schedule.txt");
                 assign_appointment(test2, "test_schedule.txt");

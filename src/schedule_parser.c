@@ -12,6 +12,7 @@ void assign_appointment(patient_t patient,char file_name[]){
 
     char id[10];
     date_to_id(appointment_date, id);
+    printf("%s\n",id);
     assign_appointment_to_patient(file_name, patient, id);
 }
 
@@ -39,11 +40,7 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     FILE *fp = fopen(file_name,"r");
 
     char current_line[100];
-/*
-    for(int i = 1;i <= line;i++){
-        fgets(current_line,100,fp);
-    }
-*/
+
     go_to_line(line,fp,current_line);
 
     char cpr[15];
@@ -83,6 +80,7 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
         for(int j = range[0];j <= range[1];j++){
             current_day = future_date(current_day,j);
+            printf("date: %02d/%02d/%02d ",current_day.weekday,current_day.month,current_day.year);
             date_to_id(current_day, cpr);
             id = (long)atoi(cpr);
             rewind(fp);
@@ -92,7 +90,7 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
             }
 
             fgets(current_line,100,fp);
-            printf("%s",current_line);
+            //printf("%s",current_line);
             substring(current_line,cpr,15,10);
 
             if(strcmp(cpr,"0") == 0){
@@ -106,6 +104,8 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     if(strcmp(result_id," ")!= 0){
         return id_to_date(result_id);
     }
+
+
 }
 
 
