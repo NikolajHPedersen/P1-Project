@@ -29,6 +29,8 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 
     int line = find_entry_cpr(file_name,id);
 
+
+
     while(line == -1){
         next_day = add_day(next_day);
         date_to_id(next_day,next_day_id);
@@ -36,6 +38,8 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 
         line = find_entry_cpr(file_name,id);
     }
+
+
 
     FILE *fp = fopen(file_name,"r");
 
@@ -75,31 +79,54 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
             range[1] = 60;
     }
 
+
+
     date_t current_day = next_day;
+
+    date_t *valid_dates = malloc(sizeof(date_t)*(range[1] - range[0] + 1));
+
+    int iter = 0, index = 0, dest;
+    char temp_id[100] = " ";
+    char iter_line[100] = " ";
+    char *check_ptr;
+
+
+    while(iter <= range[1] - range[0]){
+        dest = -1;
+        //current_day = future_date(next_day,range[0] + iter);
+        current_day = add_day(current_day);
+        printf("%02d ",current_day.day);
+        date_to_id(current_day,temp_id);
+        printf("%s ",temp_id);
+        sprintf(iter_line,"## %s",temp_id);
+        rewind(fp);
+        while(dest == -1){
+            check_ptr = fgets(current_line,100,fp);
+            if(check_ptr == NULL){
+                break;
+            }
+            else if(strcmp(iter_line,current_line) == 0){
+                valid_dates[index] = current_day;
+
+                index++;
+                dest = 0;
+            }
+        }
+        if(current_day.day - next_day.day == range[1]){
+            break;
+        }
+        iter++;
+
+    }
+
 
     for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
         for(int j = range[0];j <= range[1];j++){
-            current_day = future_date(current_day,j);
-            printf("date: %02d/%02d/%02d ",current_day.weekday,current_day.month,current_day.year);
-            date_to_id(current_day, cpr);
-            id = (long)atoi(cpr);
-            rewind(fp);
-            line = find_block_id(fp,id);
-            if(line == -1){
-                continue;
-            }
 
-            fgets(current_line,100,fp);
-            //printf("%s",current_line);
-            substring(current_line,cpr,15,10);
 
-            if(strcmp(cpr,"0") == 0){
-                substring(current_line,result_id,3,6);
-                break;
-            }
-            current_day = next_day;
         }
     }
+    free(valid_dates);
     fclose(fp);
     if(strcmp(result_id," ")!= 0){
         return id_to_date(result_id);
