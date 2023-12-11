@@ -88,7 +88,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     char iter_line[100] = " ";
     char *check_ptr;
 
-
     while(iter <= range[1] - range[0]){
         dest = -1;
         //current_day = future_date(next_day,range[0] + iter);
@@ -111,7 +110,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
             }
         }
         iter++;
-
     }
 
     char current_id[100] = " ";
@@ -119,7 +117,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 
     char *n_check_pointer;
     int end = 0;
-
 
     if(index != 0){
         for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
@@ -159,11 +156,42 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
             }
         }
     }
-    printf("|%s|",result_id);
-    fclose(fp);
+
+
     if(strcmp(result_id," ")!= 0){
+        fclose(fp);
         return id_to_date(result_id);
     }
+
+    int it = range[1] + 1;
+    date_t c_date = add_day(valid_dates[index]);
+
+
+    for(int j = range[1] + 1;j <= DAYS_IN_SCHEDULE;j++){
+        rewind(fp);
+
+        date_to_id(c_date,current_id);
+        sprintf(c_line, "## %s",current_id);
+
+        int k = 0;
+        while(k == 0){
+            n_check_pointer = fgets(current_line,100,fp);
+            if(strstr(current_line,c_line) != NULL){
+                k = 1;
+            }
+            if(n_check_pointer == NULL){
+                k = 1;
+            }
+        }
+
+        for(int i = 1;i < APPOINTMENTS_PER_DAY;i++){
+
+        }
+        add_day(c_date);
+        it++;
+    }
+
+
 
     return next_day;
 }
