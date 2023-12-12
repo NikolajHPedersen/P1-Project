@@ -6,7 +6,9 @@
 
 #define APPOINTMENTS_PER_DAY (60*WORKING_DAY/APPOINTMENT_DURATION)
 
-void assign_appointment(patient_t patient,char file_name[]);
+void assign_appointments_new_patients(char new_patient_db[], char schedule_file[], date_t date);
+
+void assign_appointment(patient_t patient, date_t date,char file_name[]);
 
 date_t assign_date(patient_t patient, char file_name[], date_t next_day);
 
@@ -28,4 +30,4 @@ patient_t serialize_patient(char *str);
 
 int count_lines_in_file(FILE *fp);
 
-patient_t *read_new_patients(char filename[]);
+patient_t *read_new_patients(char file_name[],int *new_patients);

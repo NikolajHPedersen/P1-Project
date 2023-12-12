@@ -41,6 +41,8 @@ void get_date_id(struct tm *date, char *str);
 
 date_t id_to_date(char id[]);
 
+void get_current_date(char date_id[]);
+
 void date_to_id(date_t date, char output[]);
 
 //void add_day(date_t *date);

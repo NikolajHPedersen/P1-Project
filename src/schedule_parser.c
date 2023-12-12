@@ -1,20 +1,38 @@
 #include "schedule_parser.h"
 
-patient_t *read_new_patients(char filename[]){
-    FILE *fp = fopen(filename, "r");
+void assign_appointments_new_patients(char new_patient_db[], char schedule_file[], date_t date){
+    int new_patients;
+    patient_t *patients = read_new_patients(new_patient_db, &new_patients);
+    if(patients == NULL){
+        printf("No new patients to assign appointments to.");
+        return;
+    }
+    sort_patients_by_hwg(patients, new_patients);
+    for(int i = 0;i < new_patients;i++){
+        assign_appointment(patients[i],date,schedule_file);
+    }
+    free(patients);
+    remove(new_patient_db);
+}
+
+
+patient_t *read_new_patients(char file_name[],int *new_patients){
+    FILE *fp = fopen(file_name, "r");
     if(fp == NULL){
         printf("No new Patients");
         return NULL;
     }
-    char buffer[15] = "";
+    char buffer[20] = "";
 
     int lines_in_file = count_lines_in_file(fp);
+    *new_patients = lines_in_file;
+
     rewind(fp);
 
-    unsigned int *new_patients_cpr = malloc(sizeof(int)*lines_in_file);
+    unsigned int *new_patients_cpr = malloc(sizeof(unsigned int)*lines_in_file);
 
     for(int i = 0;i < lines_in_file;i++){
-        fgets(buffer,10,fp);
+        fgets(buffer,12,fp);
         new_patients_cpr[i] = strtoul(buffer,NULL,10);
     }
     fclose(fp);
@@ -44,15 +62,9 @@ int count_lines_in_file(FILE *fp){
 }
 
 
-void assign_appointment(patient_t patient,char file_name[]){
-    //FOR TESTING PURPOSES ONLY
-    date_t test = {
-        23,
-        12,
-        22
-    };
+void assign_appointment(patient_t patient, date_t date,char file_name[]){
 
-    date_t appointment_date = assign_date(patient,file_name,test);
+    date_t appointment_date = assign_date(patient,file_name,date);
 
     char id[10];
     date_to_id(appointment_date, id);
@@ -274,7 +286,7 @@ void assign_appointment_to_patient(char file_name[],patient_t patient, char bloc
     long id = (long)atoi(block_id);
 
     char patient_cpr[100];
-    sprintf(patient_cpr, "%u",patient.patient_id);
+    sprintf(patient_cpr, "%010u",patient.patient_id);
 
     int insert_line = 0;
 

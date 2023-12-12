@@ -21,6 +21,12 @@ int main(void){
     int user_input;
     int loop = 1;
 
+    date_t date = {
+        23,
+        12,
+        18
+    };
+
     while(loop == 1){
         printf("Which submenu do you wish to access?\n");
         printf("%s[0], %s[1], %s[2], %s[3], %s[4], %s[5]\n",
@@ -29,21 +35,12 @@ int main(void){
         scanf("%d",&user_input);
         patient_t test_p;
 
-        patient_t *patients = read_new_patients("new_patients.txt");
-
-        char test[100];
-
         switch (user_input) {
             case 0:
-                create_empty_schedule("test_schedule.txt");
-                /*
-                strcpy(test, find_and_read_patient_line_binary("test_db.txt", 2509082456));
-                test_p = serialize_patient(find_and_read_patient_line_binary("test_db.txt", 2509082456));
-                */
-                printf("\n Result: %s\n", test);
-                printf("%s\n",patients[0].first_name);
-                printf("%s\n",patients[1].first_name);
-                free(patients);
+                //create_empty_schedule("test_schedule.txt");
+
+                assign_appointments_new_patients("new_patients.txt","test_schedule.txt",date);
+
                 break;
             case 1:
                 patient_creation(NULL);
