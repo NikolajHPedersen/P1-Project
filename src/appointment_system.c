@@ -1,8 +1,4 @@
 #include "appointment_system.h"
-#include "file_reader.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
 int patient_creation(unsigned int const *CPR){
     unsigned int internal_CPR;

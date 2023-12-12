@@ -26,4 +26,6 @@ void sort_patients_by_hwg(patient_t *patients, int len);
 
 patient_t serialize_patient(char *str);
 
-int find_char_in_string(char str[],char target, int offset);
+int count_lines_in_file(FILE *fp);
+
+patient_t *read_new_patients(char filename[]);

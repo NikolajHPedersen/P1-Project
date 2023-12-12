@@ -1,5 +1,49 @@
 #include "schedule_parser.h"
 
+patient_t *read_new_patients(char filename[]){
+    FILE *fp = fopen(filename, "r");
+    if(fp == NULL){
+        printf("No new Patients");
+        return NULL;
+    }
+    char buffer[15] = "";
+
+    int lines_in_file = count_lines_in_file(fp);
+    rewind(fp);
+
+    unsigned int *new_patients_cpr = malloc(sizeof(int)*lines_in_file);
+
+    for(int i = 0;i < lines_in_file;i++){
+        fgets(buffer,10,fp);
+        new_patients_cpr[i] = strtoul(buffer,NULL,10);
+    }
+    fclose(fp);
+
+    patient_t *patients = malloc(sizeof(patient_t)*lines_in_file);
+
+    for(int i = 0;i < lines_in_file;i++){
+        patients[i] = serialize_patient(find_and_read_patient_line_binary("test_db.txt",new_patients_cpr[i]));
+    }
+
+    return patients;
+}
+
+int count_lines_in_file(FILE *fp){
+    char buffer[15];
+    char *check_ptr;
+    int count = 0;
+
+    while(1){
+        check_ptr = fgets(buffer,15,fp);
+
+        if(check_ptr == NULL){
+            return count;
+        }
+        count++;
+    }
+}
+
+
 void assign_appointment(patient_t patient,char file_name[]){
     //FOR TESTING PURPOSES ONLY
     date_t test = {
@@ -213,57 +257,15 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 
 patient_t serialize_patient(char str[]){
     patient_t new_patient;
-
-    sscanf(str,"%u",&new_patient.patient_id);
-
-
-    char res[5][32] = {
-        "",
-        "",
-        "",
-        "",
-        ""
-    };
-
-    int substring_start;
-    int substring_end;
-    int len;
-    int offset = 0;
-
-    for(int i = 0;i < 5;i++){
-        substring_start = find_char_in_string(str,':',offset) + 2;
-        substring_end = find_char_in_string(str,',',substring_start);
-        if(substring_end == -1){
-            substring_end = find_char_in_string(str,'\0',substring_start);
-        }
-        len = substring_end - substring_start;
-        substring(str,res[i],substring_start,len);
-        offset = substring_end;
-    }
-
-    new_patient.patient_id =  strtoul(res[0],NULL,10);
-    strcpy(new_patient.first_name,res[1]);
-    strcpy(new_patient.last_name,res[2]);
-    new_patient.HWG = res[3][0];
-    new_patient.appointments =  strtoul(res[4],NULL,10);
-
-
-
+    sscanf(str,"id: %u,first_name: %[^,],last_name: %[^,],HWG: %c,app: %u",
+           &new_patient.patient_id,
+           new_patient.first_name,
+           new_patient.last_name,
+           &new_patient.HWG,
+           &new_patient.appointments);
 
     return new_patient;
 }
-
-int find_char_in_string(char str[],char target, int offset){
-    int i = offset;
-    for(;str[i] != target;i++){
-        if(str[i] == '\0'){
-            return -1;
-        }
-    }
-    return i;
-}
-
-
 
 void assign_appointment_to_patient(char file_name[],patient_t patient, char block_id[]){
     int appointments_per_day = 60*WORKING_DAY/APPOINTMENT_DURATION;
