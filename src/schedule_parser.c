@@ -214,9 +214,16 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 patient_t serialize_patient(char str[]){
     patient_t new_patient;
 
-    sscanf(str,"id: %d,first_name: %[]s,last_name: %s,HWG: %c,app: %u",&new_patient.patient_id, new_patient.first_name, new_patient.last_name, &new_patient.HWG, &new_patient.appointments);
-    /*
-    char res[5][32];
+    sscanf(str,"%u",&new_patient.patient_id);
+
+
+    char res[5][32] = {
+        "",
+        "",
+        "",
+        "",
+        ""
+    };
 
     int substring_start;
     int substring_end;
@@ -233,15 +240,15 @@ patient_t serialize_patient(char str[]){
         substring(str,res[i],substring_start,len);
         offset = substring_end;
     }
-    for(int i = 0;i < 5;i++){
-        printf("%s\n",res[i]);
-    }
-    */
-    printf("%u\n",new_patient.patient_id);
-    printf("%s\n",new_patient.first_name);
-    printf("%s\n",new_patient.last_name);
-    printf("%c\n",new_patient.HWG);
-    printf("%u\n",new_patient.appointments);
+
+    new_patient.patient_id =  strtoul(res[0],NULL,10);
+    strcpy(new_patient.first_name,res[1]);
+    strcpy(new_patient.last_name,res[2]);
+    new_patient.HWG = res[3][0];
+    new_patient.appointments =  strtoul(res[4],NULL,10);
+
+
+
 
     return new_patient;
 }
