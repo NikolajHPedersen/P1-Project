@@ -12,7 +12,6 @@ void assign_appointment(patient_t patient,char file_name[]){
 
     char id[10];
     date_to_id(appointment_date, id);
-    printf("%s\n",id);
     assign_appointment_to_patient(file_name, patient, id);
 }
 
@@ -58,6 +57,9 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     if(strcmp(result_id," ") != 0){
         return id_to_date(result_id);
     }
+
+
+
     switch(patient.HWG){
         case 'A':
             range[0] = 1;
@@ -76,8 +78,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
             range[0] = 31;
             range[1] = 60;
     }
-
-
 
     date_t current_day = next_day;
 
@@ -122,11 +122,10 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
         for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
             for(int j = 0; j <= index;j++){
                 date_to_id(valid_dates[j],current_id);
-                printf("%s ",current_id);
 
                 sprintf(c_line,"## %s",current_id);
                 rewind(fp);
-                printf("%s ", c_line);
+
                 int k = 0;
                 while(k == 0){
                     n_check_pointer = fgets(current_line,100,fp);
@@ -157,7 +156,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
         }
     }
 
-
     if(strcmp(result_id," ")!= 0){
         fclose(fp);
         return id_to_date(result_id);
@@ -172,10 +170,9 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
         rewind(fp);
 
         date_to_id(c_date,current_id);
-        printf("%s\n",current_id);
+
         sprintf(c_line, "## %s",current_id);
         c_date =  add_day(c_date);
-
 
         int k = 0;
         while(k == 0){
@@ -210,9 +207,17 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
         fclose(fp);
         return id_to_date(result_id);
     }
-    printf(" Hello ");
 
     return next_day;
+}
+
+patient_t serialize_patient(char *str){
+    patient_t new_patient;
+
+    sscanf(str, "%*s: %u,%*s: %s,%*s: %s,%*s: %c,%*s: %u",
+                                &new_patient.patient_id,new_patient.first_name,
+                                new_patient.last_name,&new_patient.HWG,&new_patient.appointments);
+    return new_patient;
 }
 
 
@@ -253,14 +258,6 @@ void assign_appointment_to_patient(char file_name[],patient_t patient, char bloc
     }
 }
 
-date_t future_date(date_t date, int time_skip){
-    for(int i = 1;i <= time_skip;i++){
-        date = add_day(date);
-    }
-    return date;
-}
-
-
 void string_helper(char appointment_id[],char cpr[],char dest[]){
     char local[100];
     substring(appointment_id,local,0,15);
@@ -272,6 +269,16 @@ void go_to_line(int line,FILE *fp,char *current_line){
         fgets(current_line,100,fp);
     }
 }
+
+void sort_patients_by_hwg(patient_t *patients, int len){
+    qsort(patients, len, sizeof(patient_t),patient_cmp);
+}
+
+int patient_cmp(const void * a, const void * b){
+    patient_t *p1 = (patient_t *)a, *p2 = (patient_t *)b;
+    return (p1->HWG) - (p2->HWG);
+}
+
 
 int find_block_id(FILE *fp, long block_id){
     char cpr_str[10];

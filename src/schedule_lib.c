@@ -187,7 +187,6 @@ void substring(char const src[],char dest[] ,int start,int len){
         dest[i] = temp;
     }
     dest[i + 1] = '\0';
-
 }
 
 void date_to_id(date_t date, char output[]){

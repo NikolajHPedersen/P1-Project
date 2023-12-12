@@ -16,7 +16,7 @@ struct patient_t{
     char last_name[32];
     int age;
     char HWG;
-    char factors[][32];
+    unsigned int appointments;
 };
 typedef struct patient_t patient_t;
 

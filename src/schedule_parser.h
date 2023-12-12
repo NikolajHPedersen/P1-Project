@@ -19,3 +19,7 @@ void assign_appointment_to_patient(char file_name[],patient_t patient, char bloc
 void string_helper(char appointment_id[],char cpr[],char dest[]);
 
 int find_block_id(FILE *fp, long block_id);
+
+int patient_cmp(const void * a, const void * b);
+
+void sort_patients_by_hwg(patient_t *patients, int len);
