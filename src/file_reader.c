@@ -26,10 +26,8 @@ void change_entry(char file_name[], char message[], int line_number){
     //Open the file in which the entry should be inserted and a temp file
     FILE *fp = fopen(file_name,"r");
     FILE *temp = fopen("temp.txt","w");
-    if(fp == NULL){
-        printf("Something went wrong");
-        exit(EXIT_FAILURE);
-    }
+    check_fopen_success(fp);
+    check_fopen_success(temp);
 
     //Copy the contents of the main file to the temp file until the line
     //Where the entry is to be changed
