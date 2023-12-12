@@ -211,13 +211,44 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     return next_day;
 }
 
-patient_t serialize_patient(char *str){
-    patient_t new_patient;
+patient_t serialize_patient(char str[]){
+    patient_t new_patient = {
 
-    sscanf(str, "%*s: %u,%*s: %s,%*s: %s,%*s: %c,%*s: %u",
-                                &new_patient.patient_id,new_patient.first_name,
-                                new_patient.last_name,&new_patient.HWG,&new_patient.appointments);
+    };
+
+    char res[5][32];
+
+    int substring_start;
+    int substring_end;
+    int len;
+    int offset = 0;
+
+    for(int i = 0;i < 5;i++){
+        substring_start = find_char_in_string(str,':',offset) + 2;
+        substring_end = find_char_in_string(str,',',substring_start);
+        if(substring_end == -1){
+            substring_end = find_char_in_string(str,'\0',substring_start);
+        }
+        len = substring_end - substring_start;
+        substring(str,res[i],substring_start,len);
+        offset = substring_end + 1;
+    }
+    for(int i = 0;i < 5;i++){
+        printf("%s\n",res[i]);
+    }
+
+
     return new_patient;
+}
+
+int find_char_in_string(char str[],char target, int offset){
+    int i = offset;
+    for(;str[i] != target;i++){
+        if(str[i] == '\0'){
+            return -1;
+        }
+    }
+    return i;
 }
 
 

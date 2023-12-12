@@ -27,20 +27,21 @@ int main(void){
                menu_items[0], menu_items[1], menu_items[2], menu_items[3], menu_items[4], menu_items[5]);
 
         scanf("%d",&user_input);
+        patient_t test_p;
 
-
+        char test[100];
 
         switch (user_input) {
             case 0:
                 create_empty_schedule("test_schedule.txt");
 
+                strcpy(test, find_and_read_patient_line_binary("test_db.txt", 2509082456));
+                test_p = serialize_patient(find_and_read_patient_line_binary("test_db.txt", 2509082456));
 
+                test_p = serialize_patient(find_and_read_patient_line_binary("test_db.txt", 2708090808));
+                //printf("\n Result: %s\n", test);
+                //printf("%010u",test_p.patient_id);
 
-                /*
-                assign_appointment(test, "test_schedule.txt");
-                assign_appointment(test2, "test_schedule.txt");
-                assign_appointment(test3, "test_schedule.txt");
-                */
                 break;
             case 1:
                 patient_creation(NULL);

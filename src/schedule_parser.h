@@ -23,3 +23,7 @@ int find_block_id(FILE *fp, long block_id);
 int patient_cmp(const void * a, const void * b);
 
 void sort_patients_by_hwg(patient_t *patients, int len);
+
+patient_t serialize_patient(char *str);
+
+int find_char_in_string(char str[],char target, int offset);
