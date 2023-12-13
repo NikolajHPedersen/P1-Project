@@ -181,14 +181,13 @@ char *read_entry(char file_name[], int line){
 
     char *check_ptr;
 
-    for(int i = 1;i <= line;i++){
+    for(int i = 0;i <= line;i++){
         check_ptr = fgets(buffer,100,fp);
         if(check_ptr == NULL){
             return NULL;
         }
 
     }
-    check_ptr = fgets(buffer,100,fp);
     if(check_ptr == NULL){
         return NULL;
     }

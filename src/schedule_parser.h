@@ -6,6 +6,8 @@
 
 #define APPOINTMENTS_PER_DAY (60*WORKING_DAY/APPOINTMENT_DURATION)
 
+#define PATIENT_DB "test_db.txt"
+
 void assign_appointments_new_patients(char new_patient_db[], char schedule_file[], date_t date);
 
 void assign_appointment(patient_t patient, date_t date,char file_name[]);
