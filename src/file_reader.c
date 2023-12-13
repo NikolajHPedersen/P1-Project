@@ -51,10 +51,8 @@ void change_entry(char file_name[], char message[], int line_number){
 
     fp = fopen(file_name,"w");
     temp = fopen("temp.txt","r");
-    if(fp == NULL){
-        printf("Something went wrong");
-        exit(EXIT_FAILURE);
-    }
+    check_fopen_success(fp);
+    check_fopen_success(temp);
 
     //Copy everything from the temp file to the main file
     copy_file(temp,fp);
