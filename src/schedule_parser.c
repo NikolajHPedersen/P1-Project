@@ -63,7 +63,6 @@ int count_lines_in_file(FILE *fp){
 
 
 void assign_appointment(patient_t patient, date_t date,char file_name[]){
-
     date_t appointment_date = assign_date(patient,file_name,date);
 
     char id[10];
@@ -83,8 +82,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     id = (long)atoi(next_day_id);
 
     int line = find_entry_cpr(file_name,id);
-
-
 
     while(line == -1){
         next_day = add_day(next_day);
@@ -113,7 +110,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     if(strcmp(result_id," ") != 0){
         return id_to_date(result_id);
     }
-
 
 
     switch(patient.HWG){
