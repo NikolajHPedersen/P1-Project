@@ -346,7 +346,6 @@ int patient_cmp(const void * a, const void * b){
     return (p1->HWG) - (p2->HWG);
 }
 
-
 int find_block_id(FILE *fp, long block_id){
     char cpr_str[10];
     sprintf(cpr_str, "%ld", block_id);

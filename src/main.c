@@ -48,7 +48,7 @@ int main(void){
             case 2:
                 change_entry_v2("test_db.txt","This line was changed again!",1);
                 printf("%s", read_entry("test_db.txt",6));
-                printf("%d", find_entry_cpr("test_db.txt",32872));
+                printf("%d", find_entry_cpr("test_db.txt",2909882352));
                 break;
             case 3:
 
