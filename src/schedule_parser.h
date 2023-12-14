@@ -24,7 +24,7 @@ void assign_appointment_to_patient(char file_name[],patient_t patient, char bloc
 
 void string_helper(char appointment_id[],char cpr[],char dest[]);
 
-int find_block_id(FILE *fp, long block_id);
+char *find_block_id(FILE *fp, char *current_id);
 
 int patient_cmp(const void * a, const void * b);
 
@@ -35,3 +35,5 @@ patient_t serialize_patient(char *str);
 int count_lines_in_file(FILE *fp);
 
 patient_t *read_new_patients(char file_name[],int *new_patients);
+
+int read_cpr(FILE *fp, char *result_id, char *current_line);

@@ -125,6 +125,9 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     //the block id as a long
     long id;
 
+    //Check for loop termination
+    int end = 0;
+
     //Convert the date to a string and the string to a long
     date_to_id(next_day,next_day_id);
     id = (long)atoi(next_day_id);
@@ -156,21 +159,9 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 
     //Iterate through all appointments and look for an empty appointment
     for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
-        //read the current line
-        fgets(current_line,100,fp);
-
-        //take a substring of the current line. The start of the substring is character 15 because
-        //in the format of the schedule that is where the CPR number of the assigned patients
-        substring(current_line,cpr,15,10);
-
-        //For empty appointments the CPR of the person is set to 0
-        //If cpr is equivalent to 0 then the block id is saved in the result id string and the loop is broken
-        if(strcmp(cpr,"0") == 0){
-            //create substring containing the block id.
-            //The block id always starts at the third character and has a length of 6
-            substring(current_line,result_id,3,6);
+        end = read_cpr(fp, result_id,current_line);
+        if(end != 0)
             break;
-        }
     }
 
     //Since result_id is initialized as a space. Check if it has changed. If it has convert result id to date and return it
@@ -198,7 +189,7 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
     char c_line[100] = " ";
 
     char *n_check_pointer;
-    int end = 0;
+
 
     for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
         for(int j = 0; j <= iter;j++){
@@ -206,27 +197,16 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 
             rewind(fp);
 
-            int k = 0;
-            while(k == 0){
-                n_check_pointer = fgets(current_line,100,fp);
-                if(strstr(current_line,current_id) != NULL){
-                    k = 1;
-                }
-                if(n_check_pointer == NULL){
-                    k = 1;
-                }
-            }
+            n_check_pointer = find_block_id(fp, current_id);
             if(n_check_pointer == NULL){
                 continue;
             }
             for(int t = 1;t < i;t++){
                 fgets(current_line,100,fp);
             }
-            fgets(current_line,100,fp);
-            substring(current_line,cpr,15,10);
-            if(strcmp(cpr,"0") == 0){
-                substring(current_line,result_id,3,6);
-                end = 1;
+
+            end = read_cpr(fp,result_id,current_line);
+            if(end != 0){
                 break;
             }
         }
@@ -242,9 +222,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 
     date_t c_date = valid_dates[iter - 1];
 
-    int end_loop = 0;
-
-
     for(int j = range[1] + 1;j <= 2*DAYS_IN_SCHEDULE;j++){
         rewind(fp);
 
@@ -253,36 +230,22 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
         sprintf(c_line, "## %s",current_id);
         c_date =  add_day(c_date);
 
-        int k = 0;
-        while(k == 0){
-            n_check_pointer = fgets(current_line,100,fp);
-            if(strstr(current_line,c_line) != NULL){
-                k = 1;
-            }
-            if(n_check_pointer == NULL){
-                k = 1;
-            }
-        }
+        n_check_pointer = find_block_id(fp, current_id);
         if(n_check_pointer == NULL){
             continue;
         }
 
         for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
-            fgets(current_line,100,fp);
-            substring(current_line,cpr,15,10);
-            if(strcmp(cpr,"0") == 0){
-                substring(current_line,result_id,3,6);
-                end_loop = 1;
+            end = read_cpr(fp,result_id,current_line);
+            if(end != 0){
                 break;
             }
         }
-        if(end_loop != 0){
+        if(end != 0){
             break;
         }
-
     }
-
-    if(strcmp(result_id," ")!= 0){
+    if(strcmp(result_id," ") != 0){
         fclose(fp);
         return id_to_date(result_id);
     }
@@ -356,6 +319,25 @@ void set_range_end(int *range_end,char HWG){
     }
 }
 
+int read_cpr(FILE *fp, char *result_id, char *current_line){
+    char cpr[20] = "";
+
+    fgets(current_line,100,fp);
+    //take a substring of the current line. The start of the substring is character 15 because
+    //in the format of the schedule that is where the CPR number of the assigned patients
+    substring(current_line,cpr,15,10);
+    //For empty appointments the CPR of the person is set to 0
+    //If cpr is equivalent to 0 then the block id is saved in the result id string and the loop is broken
+    if(strcmp(cpr,"0") == 0){
+        //create substring containing the block id.
+        //The block id always starts at the third character and has a length of 6
+        substring(current_line,result_id,3,6);
+        return 1;
+
+    }
+    return 0;
+}
+
 void string_helper(char appointment_id[],char cpr[],char dest[]){
     char local[100];
     substring(appointment_id,local,0,15);
@@ -380,25 +362,18 @@ int patient_cmp(const void *a, const void *b){
     return (p1->HWG) - (p2->HWG);
 }
 
-int find_block_id(FILE *fp, long block_id){
-    char cpr_str[10];
-    sprintf(cpr_str, "%ld", block_id);
-
-    char buffer[100] = "";
-
-    char *check_ptr;
-
-    int count = 1;
-
-    for(;;count++){
-        check_ptr = fgets(buffer,100,fp);
-        if(check_ptr == NULL){
-            return -1;
+char *find_block_id(FILE *fp, char *current_id){
+    char *check_pointer;
+    char current_line[100];
+    int k = 0;
+    while(k == 0){
+        check_pointer = fgets(current_line,100,fp);
+        if(strstr(current_line,current_id) != NULL){
+            k = 1;
         }
-        if(strstr(buffer, cpr_str)){
-            break;
+        if(check_pointer == NULL){
+            k = 1;
         }
     }
-
-    return count;
+    return check_pointer;
 }

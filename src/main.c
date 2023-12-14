@@ -3,7 +3,7 @@
 
 #include "appointment_system.h"
 #include "file_reader.h"
-#include "schedule_parser.h"
+//#include "schedule_parser.h"
 
 //This is the file containing the main function.
 //Most things should be implemented in other files
@@ -46,11 +46,10 @@ int main(void){
                 patient_creation(NULL);
                 break;
             case 2:
-                change_entry_v2("test_db.txt","This line was changed again!",1);
-                printf("%s", read_entry("test_db.txt",6));
-                printf("%d", find_entry_cpr("test_db.txt",2909882352));
+
                 break;
             case 3:
+                show_schedule("test_schedule.txt");
 
                 break;
             case 4:
