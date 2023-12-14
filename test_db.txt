@@ -13,5 +13,3 @@ id: 2909882349,first_name: Oba,last_name: Kenoba,HWG: A,app: 0
 id: 2909882350,first_name: Oba,last_name: Kenoba,HWG: A,app: 0
 id: 2909882351,first_name: Oba,last_name: Kenoba,HWG: B,app: 0
 id: 2909882352,first_name: Oba,last_name: Kenoba,HWG: C,app: 0
-id: 2909882353,first_name: Oba,last_name: Kenoba,HWG: A,app: 0
-id: 3785875157,first_name: Obo,last_name: Kenobo,HWG: C,app: 0

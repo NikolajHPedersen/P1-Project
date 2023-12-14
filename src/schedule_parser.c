@@ -109,21 +109,32 @@ void assign_appointment(patient_t patient, date_t date,char file_name[]){
     assign_appointment_to_patient(file_name, patient, id);
 }
 
-
+//This function returns the date a given patient should be assigned an appointment on
+//It takes three parameters the patient who needs an appointment, file containing the schedule
+//and the date from which the appointments should be assigned
 date_t assign_date(patient_t patient, char file_name[], date_t next_day){
-
+    //The range of days that the patient can be assigned appointments
     int range[2];
 
+    //Contains the id of the starting date
     char next_day_id[10] = " ";
+
+    //The id that will be converted to the date that is returned
     char result_id[10] = " ";
 
+    //the block id as a long
     long id;
 
+    //Convert the date to a string and the string to a long
     date_to_id(next_day,next_day_id);
     id = (long)atoi(next_day_id);
 
+    //look for the date in the schedule file and save the line number
     int line = find_entry_cpr(file_name,id);
 
+    //If the date does not exist in the file (aka it is a weekend)
+    //Then keep adding days until a weekday is reached
+    //We do the same as above until a weekday is reached
     while(line == -1){
         next_day = add_day(next_day);
         date_to_id(next_day,next_day_id);
@@ -131,55 +142,58 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 
         line = find_entry_cpr(file_name,id);
     }
-
+    //Open the file
     FILE *fp = fopen(file_name,"r");
 
+    //Buffer to store the line read from fgets
     char current_line[100];
 
+    //Go to the line found in the while loop
     go_to_line(line,fp,current_line);
 
+    //This string stores the cpr to be read as a substring from current_line
     char cpr[15];
 
+    //Iterate through all appointments and look for an empty appointment
     for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
+        //read the current line
         fgets(current_line,100,fp);
+
+        //take a substring of the current line. The start of the substring is character 15 because
+        //in the format of the schedule that is where the CPR number of the assigned patients
         substring(current_line,cpr,15,10);
+
+        //For empty appointments the CPR of the person is set to 0
+        //If cpr is equivalent to 0 then the block id is saved in the result id string and the loop is broken
         if(strcmp(cpr,"0") == 0){
+            //create substring containing the block id.
+            //The block id always starts at the third character and has a length of 6
             substring(current_line,result_id,3,6);
             break;
         }
     }
+
+    //Since result_id is initialized as a space. Check if it has changed. If it has convert result id to date and return it
     if(strcmp(result_id," ") != 0){
         return id_to_date(result_id);
     }
 
+    //Set the range of valid days
     range[0] = 1;
-    switch(patient.HWG){
-        case 'A':
-            range[1] = 2;
-            break;
-        case 'B':
-            range[1] = 9;
-            break;
-        case 'C':
-            range[1] = 29;
-            break;
-        default:
-            printf("No assigned HWG");
-            range[1] = 60;
-    }
+    set_range_end(&range[1],patient.HWG);
 
     date_t current_day = next_day;
 
+    //Fill the valid_dates array with all the days
     date_t valid_dates[range[1] - range[0] + 1];
-
     int iter = 0;
-
     while(iter <= range[1] - range[0]){
         current_day = add_day(current_day);
         valid_dates[iter] = current_day;
         iter++;
     }
 
+    //
     char current_id[100] = " ";
     char c_line[100] = " ";
 
@@ -190,7 +204,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
         for(int j = 0; j <= iter;j++){
             date_to_id(valid_dates[j],current_id);
 
-            //sprintf(c_line,"## %s",current_id);
             rewind(fp);
 
             int k = 0;
@@ -325,6 +338,24 @@ void assign_appointment_to_patient(char file_name[],patient_t patient, char bloc
     }
 }
 
+void set_range_end(int *range_end,char HWG){
+    switch(HWG){
+        case 'A':
+            *range_end = 2;
+            break;
+        case 'B':
+            *range_end = 9;
+            break;
+        case 'C':
+            *range_end = 29;
+            break;
+        default:
+            //printf("No assigned HWG");
+            *range_end = 60;
+            break;
+    }
+}
+
 void string_helper(char appointment_id[],char cpr[],char dest[]){
     char local[100];
     substring(appointment_id,local,0,15);
@@ -336,13 +367,16 @@ void go_to_line(int line,FILE *fp,char *current_line){
         fgets(current_line,100,fp);
     }
 }
-
+//Sorts patients within an array by their HWG group using qsort
 void sort_patients_by_hwg(patient_t *patients, int len){
     qsort(patients, len, sizeof(patient_t),patient_cmp);
 }
 
-int patient_cmp(const void * a, const void * b){
+//Comparison function used by qsort to sort patients
+int patient_cmp(const void *a, const void *b){
+    //Two patient pointers are created and the two void pointers are cast to the same type
     patient_t *p1 = (patient_t *)a, *p2 = (patient_t *)b;
+    //The return value for the comparator function needs to follow
     return (p1->HWG) - (p2->HWG);
 }
 

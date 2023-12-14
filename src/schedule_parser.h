@@ -14,6 +14,8 @@ void assign_appointment(patient_t patient, date_t date,char file_name[]);
 
 date_t assign_date(patient_t patient, char file_name[], date_t next_day);
 
+void set_range_end(int *range_end,char HWG);
+
 void go_to_line(int line,FILE *fp,char *current_line);
 
 date_t future_date(date_t date, int time_skip);
