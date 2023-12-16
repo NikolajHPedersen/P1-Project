@@ -328,14 +328,14 @@ int binary_search(unsigned int* arr_to_search, unsigned int target_num, int lowe
 
     //We check if the value at the mid-index is less then the target_cpr
     if(arr_to_search[mid] < target_num){
-        //We set the lower_bound_of_arr to the mid index, and then repeat the process
+        //We set the lower_bound_of_arr past the mid index, and then repeat the process
         lower_bound_of_arr = mid + 1;
         return binary_search(arr_to_search, target_num, lower_bound_of_arr, highest_bound_of_arr);
     }
 
     //We check if the value at the mid index is more then the target_cpr
     if(arr_to_search[mid] > target_num){
-        //We set the higher_bound_of_arr to the mid index, and then repeat the process
+        //We set the higher_bound_of_arr below the mid index, and then repeat the process
         highest_bound_of_arr = mid - 1;
         return binary_search(arr_to_search, target_num, lower_bound_of_arr, highest_bound_of_arr);
     }
