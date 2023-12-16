@@ -9,11 +9,11 @@
 //Most things should be implemented in other files
 
 int main(void){
-    //sort_cpr_database("test_db.txt");
+    sort_cpr_database("test_db.txt");
     char menu_items[][32] = {
                         "Appointment creation",
                         "Patient creation",
-                        "Rebook/delete appointment",
+                        "Book Appointment",
                         "Show appointments",
                         "Search patient journal",
                         "Exit"};
@@ -26,6 +26,7 @@ int main(void){
         12,
         18
     };
+    unsigned int cpr;
 
     while(loop == 1){
         printf("Which submenu do you wish to access?\n");
@@ -47,6 +48,7 @@ int main(void){
                 break;
             case 2:
 
+
                 break;
             case 3:
                 show_schedule("test_schedule.txt");
@@ -54,7 +56,6 @@ int main(void){
                 break;
             case 4:
                 printf("Enter patient CPR-Number: ");
-                unsigned int cpr;
                 scanf("%10u", &cpr);
 
                 printf("\n Result: %s\n", find_and_read_patient_line_binary("test_db.txt", cpr));

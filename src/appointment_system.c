@@ -7,7 +7,7 @@ int patient_creation(unsigned int const *CPR){
     char HWG;
 
     if(CPR == NULL)
-        input(" %lld",&internal_CPR,"Enter patient CPR: \n");
+        input(" %u",&internal_CPR,"Enter patient CPR: \n");
     else
         internal_CPR = *CPR;
 
