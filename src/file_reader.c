@@ -316,7 +316,7 @@ int binary_search(unsigned int* arr_to_search, unsigned int target_num, int lowe
     //Finding the half point of the array / Finding the median of the array indexes
     int mid = floor((lower_bound_of_arr + highest_bound_of_arr) / 2);
 
-    //We check if the mid-index has the target_cpr in the array
+    //We check if the mid-index has the target_num in the array
     if(arr_to_search[mid] == target_num){
         return mid;
     }
@@ -326,14 +326,14 @@ int binary_search(unsigned int* arr_to_search, unsigned int target_num, int lowe
         return -1;
     }
 
-    //We check if the value at the mid-index is less then the target_cpr
+    //We check if the value at the mid-index is less then the target_num
     if(arr_to_search[mid] < target_num){
         //We set the lower_bound_of_arr past the mid index, and then repeat the process
         lower_bound_of_arr = mid + 1;
         return binary_search(arr_to_search, target_num, lower_bound_of_arr, highest_bound_of_arr);
     }
 
-    //We check if the value at the mid index is more then the target_cpr
+    //We check if the value at the mid index is more then the target_num
     if(arr_to_search[mid] > target_num){
         //We set the higher_bound_of_arr below the mid index, and then repeat the process
         highest_bound_of_arr = mid - 1;
