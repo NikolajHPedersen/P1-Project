@@ -39,7 +39,6 @@ int main(void){
         switch (user_input) {
             case 0:
                 //create_empty_schedule("test_schedule.txt");
-
                 assign_appointments_new_patients("new_patients.txt","test_schedule.txt",date);
 
                 break;
