@@ -21,11 +21,6 @@ int main(void){
     int user_input;
     int loop = 1;
 
-    date_t date = {
-        23,
-        12,
-        18
-    };
     unsigned int cpr;
 
     while(loop == 1){
@@ -34,11 +29,23 @@ int main(void){
                menu_items[0], menu_items[1], menu_items[2], menu_items[3], menu_items[4], menu_items[5]);
 
         scanf("%d",&user_input);
-        patient_t test_p;
 
         switch (user_input) {
             case 0:
                 //create_empty_schedule("test_schedule.txt");
+
+                printf("Please insert the the date for the appointment (dd/mm/yy): ");
+                int day;
+                int month;
+                int year;
+                scanf("%d/%d/%d", &day, &month, &year);
+
+                date_t date = {
+                        year,
+                        month,
+                        day
+                };
+
                 assign_appointments_new_patients("new_patients.txt","test_schedule.txt",date);
 
                 break;
