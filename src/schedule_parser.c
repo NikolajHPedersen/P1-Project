@@ -190,7 +190,6 @@ date_t assign_date(patient_t patient, char file_name[], date_t next_day){
 
     char *n_check_pointer;
 
-
     for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
         for(int j = 0; j <= iter;j++){
             date_to_id(valid_dates[j],current_id);

@@ -12,3 +12,5 @@ int patient_creation(unsigned int const *CPR);
 void input(char *format_string,void *ptr, char *printed_string);
 
 void show_schedule(char file_name[]);
+
+void book_appointment(char file_name[]);

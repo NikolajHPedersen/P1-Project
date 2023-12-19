@@ -58,7 +58,6 @@ void show_schedule(char file_name[]){
         return;
     }
 
-
     for(int i = 1;i <= APPOINTMENTS_PER_DAY;i++){
         res = read_cpr(fp,res_id,current_line);
 
@@ -79,5 +78,32 @@ void show_schedule(char file_name[]){
     for(int i = 0;i < index;i++){
         printf("%s",appointments[i]);
     }
+}
 
+void book_appointment(char file_name[]){
+    unsigned int cpr;
+    char buffer[100];
+
+    input("%u",&cpr,"Input CPR number of the patient:");
+
+    strcpy(buffer, find_and_read_patient_line_binary(file_name, cpr));
+
+    if(strcmp(buffer,"CPR Not Found!") == 0){
+        printf("%s\n. Do you wish to enter the patient into the system(y/n)\n",buffer);
+
+        char user_input;
+        scanf("%c",&user_input);
+        if(user_input == 'y'){
+            patient_creation(&cpr);
+        }
+
+        return;
+    }
+    char cpr_string[15];
+
+    sprintf(cpr_string,"%010u",cpr);
+
+
+    append_entry("new_patients.txt", cpr_string);
+    printf("Appointment has been booked for %010u\n",cpr);
 }

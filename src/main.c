@@ -53,8 +53,7 @@ int main(void){
                 patient_creation(NULL);
                 break;
             case 2:
-
-
+                book_appointment("test_db.txt");
                 break;
             case 3:
                 show_schedule("test_schedule.txt");
