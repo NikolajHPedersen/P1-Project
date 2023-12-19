@@ -1,19 +1,3 @@
-id: 5,first_name: jens,last_name: jensen
-id: 16,first_name: l,last_name: d
-id: 32,first_name: l,last_name: d
-id: 39746,first_name: a,last_name: b
-id: 53687,first_name: Jens,last_name: Nielsen
-id: 32873,first_name: l,last_name: d
-id: 2012094444,first_name: o,last_name: l
-id: 0707072934,first_name: Luke,last_name: Smith
-id: 0909090909,first_name: Jane,last_name: Smith
-id: 2012091234,first_name: man,last_name: h
-id: 2009083434,first_name: l,last_name: t
-id: 2012094444,first_name: k,last_name: l
-id: 3030220909,first_name: j,last_name: b
-id: 2147483647,first_name: j,last_name: s
-id: 0808080808,first_name: otte,last_name: ottesen
-id: 907229048,first_name: j,last_name: m
-id: 409882345,first_name: Hans,last_name: Hansen
-id: 907229048,first_name: j,last_name: m
-id: 2147483647,first_name: John,last_name: Johnson
+id: 1201992345,first_name: Obo,last_name: Kenobo,HWG: A,app: 0
+id: 1712044455,first_name: Johannes,last_name: Oofus,HWG: A,app: 0
+id: 2909882345,first_name: Obi,last_name: Kenobi,HWG: A,app: 0

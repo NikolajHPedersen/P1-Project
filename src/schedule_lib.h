@@ -16,7 +16,7 @@ struct patient_t{
     char last_name[32];
     int age;
     char HWG;
-    char factors[][32];
+    unsigned int appointments;
 };
 typedef struct patient_t patient_t;
 
@@ -31,27 +31,6 @@ typedef struct date_t date_t;
 enum weekday_e {sunday, monday, tuesday, wednesday, thursday, friday, saturday};
 typedef enum weekday_e weekday_e;
 
-struct appointment_t{
-    long id;
-    long patient_cpr;
-    int duration_min;
-    char description[];
-};
-typedef struct appointment_t appointment_t;
-
-struct block_t{
-    int block_id;
-    int block_size;
-
-};
-typedef struct block_t block_t;
-
-struct subblock_t{
-    unsigned int id;
-    appointment_t appointments[];
-};
-typedef struct subblock_t subblock_t;
-
 void create_empty_schedule(char file_name[]);
 
 date_t add_day(date_t date);
@@ -61,6 +40,8 @@ void append_line_schedule(FILE *fp,char *message);
 void get_date_id(struct tm *date, char *str);
 
 date_t id_to_date(char id[]);
+
+void get_current_date(char date_id[]);
 
 void date_to_id(date_t date, char output[]);
 
